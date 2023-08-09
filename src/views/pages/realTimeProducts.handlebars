@@ -1,0 +1,30 @@
+<h1>hola</h1>
+
+<form id="formPost">
+	<h2></h2>
+	<input type="text" name="title" id="title" placeholder="Title" required />
+	<br />
+	<input type="text" name="description" id="description" placeholder="Description" required />
+	<br />
+	<input type="number" name="stock" id="stock" placeholder="Stock" required />
+	<br />
+	<input type="number" name="price" id="price" placeholder="Price" required />
+	<br />
+	<input type="text" name="thumbnail" id="thumbnail" placeholder="Thumbnail" required />
+	<br />
+	<input type="text" name="code" id="code" placeholder="Code" required />
+	<br />
+	<button type="submit" id="add-prod-btn">Enviar</button>
+</form>
+
+<form id="formDelete">
+	<input type="number" name="id-prod" id="id-prod" />
+	<button type="button" id="delete-prod-btn">Borrar</button>
+</form>
+
+<section id="listProducts">
+
+</section>
+
+<script src="socket.io/socket.io.js"></script>
+<script src="js/realTime.js"></script>

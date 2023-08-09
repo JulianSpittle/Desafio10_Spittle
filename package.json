@@ -1,0 +1,18 @@
+{
+	"dependencies": {
+		"express": "^4.18.2",
+		"express-handlebars": "^7.1.2",
+		"socket.io": "^4.7.2"
+	},
+	"type": "module",
+	"name": "desafio3",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon --cwd src app.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": ""
+}

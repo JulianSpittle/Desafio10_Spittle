@@ -1,0 +1,37 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+ul {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+}
+header {
+	margin-top: 64px;
+}
+
+.navbar {
+	background-color: #fff;
+	border-bottom: 1px solid #e5e5e5;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+	padding: 0 16px;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 100;
+
+	> .navbar__ul {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 64px;
+		gap: 1rem;
+	}
+}
+
+nav ul li.active a {
+	color: black;
+}
