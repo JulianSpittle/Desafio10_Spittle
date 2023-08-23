@@ -1,4 +1,4 @@
-import ProductManager from "../manager/productManager.js";
+import ProductManager from "../dao/fs/productManager.js";
 import { socketServer } from "../app.js";
 
 export const getProductsRouter = async (req, res) => {

@@ -1,7 +1,14 @@
 import express from "express";
-import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
+import handlebars from "express-handlebars";
+import viewsRouter from "./routes/views.routes.js";
 import { Server } from "socket.io";
+import ProductManager from "./dao/ProductManager.js";
+import ChatManager from "./dao/ChatManager.js";
+import mongoose from 'mongoose';
+import productsRouter from "./routes/products.router.js";
+import cartsRouter from "./routes/carts.router.js";
+import userRouter from './routes/users.router.js';
 
 const app = express();
 const port = 8080;
@@ -9,18 +16,17 @@ const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
+app.use("/api/users", userRouter);
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
-
-//para usar con postman
-import productsRouter from "./routes/productsRouter.js";
-import cartRouter from "./routes/cartRouter.js";
 app.use("/api/products", productsRouter);
-app.use("/api/cart", cartRouter);
-//para usar con handlebars
-import viewsRouter from "./routes/viewsRouter.js";
+app.use("/api/cart", cartsRouter);
 app.use("/", viewsRouter);
+
+mongoose.connect ("mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/?retryWrites=true&w=majority");
+
+
 
 const httpServer = app.listen(port, () => {
 	console.log(`Servidor corriendo en el puerto ${port}`);
@@ -28,7 +34,6 @@ const httpServer = app.listen(port, () => {
 
 export const socketServer = new Server(httpServer);
 
-import ProductManager from "./manager/productManager.js";
 const productManager = new ProductManager();
 
 socketServer.on("connection", async (socket) => {
@@ -53,7 +58,6 @@ socketServer.on("connection", async (socket) => {
 			socket.emit("error", { error: err.message });
 		}
 	});
-
 	socket.on("deleteProduct", async (id) => {
 		try {
 			await productManager.initialize();
@@ -68,4 +72,11 @@ socketServer.on("connection", async (socket) => {
 			socket.emit("error", { error: err.message });
 		}
 	});
+	socket.on("newMessage", async (data) => {
+        CM.createMessage(data);
+        const messages = await CM.getMessages();
+        socket.emit("messages", messages);
+    });
 });
+
+const CM = new ChatManager();

@@ -1,83 +1,40 @@
 const socket = io();
+const content = document.getElementById("content");
 
-socket.on("sendProducts", (products) => {
-	updateProductsList(products);
+socket.on("realTimeProducts", (data) => {
+    let salida = ``;
+
+    data.forEach(item => {
+        salida += `<div class="col-md-4">
+            <div class="card border-0 mb-3">
+                <img src="${item.thumbnails}" class="img-fluid" alt="${item.title}">
+                <div class="card-body text-center">
+                    <p class="card-text">${item.title}<br><span class="text-success">$${item.price}</span></p>
+                </div>
+            </div>
+        </div>`;
+    });
+
+    content.innerHTML = salida;
 });
 
-const updateProductsList = (products) => {
-	const $container = document.getElementById("listProducts");
+const agregarProducto = () => {
+    const title = document.getElementById("title").value;
+    const thumbnails = document.getElementById("thumbnails").value;
+    const price = document.getElementById("price").value;
+    const product = {title:title, thumbnails:thumbnails, price:price};
 
-	$container.innerHTML = "";
+    socket.emit("nuevoProducto", product);
+}
 
-	products.forEach((prod) => {
-		const div = document.createElement("div");
-		div.innerHTML += `<div>
-    <h3>${prod.title}</h3>
-    <p>${prod.description}</p>
-    <p>${prod.price}</p>
-    <div id="thumbnail"></div>
-    <p>${prod.code}</p>
-    <p>${prod.stock}</p>
-    </div>
-    `;
+const btnAgregarProducto = document.getElementById("btnAgregarProducto");
+btnAgregarProducto.onclick = agregarProducto;
 
-		const $thumbnail = div.querySelector("#thumbnail");
+const eliminarProducto = () => {
+    const idProduct = document.getElementById("idProduct").value;
 
-		prod.thumbnail.forEach((img) => {
-			$thumbnail.innerHTML += `<img src="${img}" alt="thumbnail" />`;
-		});
-		$container.appendChild(div);
-	});
-};
+    socket.emit("eliminarProducto", idProduct);
+}
 
-const form = document.getElementById("formPost");
-form.addEventListener("submit", async (e) => {
-	e.preventDefault();
-	try {
-		const target = e.target;
-		const { title, description, stock, price, thumbnail, code } = target;
-
-		const thumbnailArray = thumbnail.value.split(" ");
-
-		console.log(thumbnailArray);
-
-		const newProduct = {
-			title: title.value,
-			description: description.value,
-			stock: parseInt(stock.value),
-			price: parseInt(price.value),
-			thumbnail: thumbnailArray,
-			code: code.value,
-		};
-
-		newProduct.status = true;
-		socket.emit("addProduct", newProduct);
-	} catch (err) {
-		console.log(err.message);
-	} finally {
-		form.reset();
-	}
-});
-
-socket.on("error", (err) => {
-	alert(err.error);
-});
-
-const $deletebtn = document.getElementById("delete-prod-btn");
-
-$deletebtn.addEventListener("click", async (e) => {
-	e.preventDefault();
-	try {
-		const id = parseInt(document.getElementById("id-prod").value);
-
-		socket.emit("deleteProduct", id);
-	} catch (err) {
-		console.log(err.message);
-	} finally {
-		document.getElementById("id-prod").value = "";
-	}
-});
-
-socket.on("productosupdated", (products) => {
-	updateProductsList(products);
-});
+const btnEliminarProducto = document.getElementById("btnEliminarProducto");
+btnEliminarProducto.onclick = eliminarProducto;
