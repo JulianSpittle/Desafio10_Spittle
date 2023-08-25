@@ -8,7 +8,7 @@ export const getProductsRouter = async (req, res) => {
 		const products = new ProductManager();
 		await products.initialize();
 
-		const getProducts = await products.getProductsGeneral();
+		const getProducts = await products.getProducts();
 		if (limit > 0 && limit < getProducts.length) {
 			const limitProducts = getProducts.slice(0, limit);
 			return res.status(200).send(limitProducts);
@@ -41,7 +41,7 @@ export const postProductRouter = async (req, res) => {
 		const products = new ProductManager();
 		await products.initialize();
 
-		const exist = await products.getProductsGeneral();
+		const exist = await products.getProducts();
 
 		if (exist.some((item) => item.code === code)) {
 			return res.status(400).send({ error: "El código ya existe" });
@@ -72,7 +72,7 @@ export const postProductRouter = async (req, res) => {
 		newProduct.status = true;
 
 		await products.addProduct(newProduct);
-		socketServer.emit("productosupdated", await products.getProductsGeneral());
+		socketServer.emit("productosupdated", await products.getProducts());
 		res.status(200).send(newProduct);
 	} catch (err) {
 		res.status(500).send({ error: err.message });
@@ -131,7 +131,7 @@ export const deleteProductRouter = async (req, res) => {
 		await products.deleteProduct(parseInt(id));
 
 		res.status(200).send({ success: "Producto eliminado", getProductById });
-		socketServer.emit("productosupdated", await products.getProductsGeneral());
+		socketServer.emit("productosupdated", await products.getProducts());
 	} catch (err) {
 		res.status(500).send({ error: err.message });
 	}

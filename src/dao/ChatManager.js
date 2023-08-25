@@ -6,7 +6,8 @@ class ChatManager {
     }
 
     async createMessage(message) {
-        return await messageModel.create(message);
+        await messageModel.create(message);
+        return true;
     }
 }
 

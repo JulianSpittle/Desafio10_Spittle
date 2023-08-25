@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const cartSchema = new mongoose.Schema({
-    id:Number,
-    products:Array
+    products: Array,
+    id: Number
 });
 
 export const cartModel = mongoose.model("carts", cartSchema);

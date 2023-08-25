@@ -1,15 +1,13 @@
-import CartManager from "../dao/fs/cartManager.js";
-import ProductManager from "../dao/fs/productManager.js";
+import CartManager from "../dao/CartManager.js";
+import ProductManager from "../dao/ProductManager.js";
 import { Router } from "express";
 
-const productsRouter = Router();
+const cartsRouter = Router();
 
-productsRouter.post("/", async (req, res) => {
+cartsRouter.post("/", async (req, res) => {
 	try {
 		const cart = new CartManager();
-		await cart.initialize();
-
-		const addProduct = await cart.newOrder();
+		const addProduct = await cart.newCart();
 		res.status(200).send(addProduct);
 	} catch (err) {
 		res.status(500).send({ error: err.message });
@@ -17,64 +15,51 @@ productsRouter.post("/", async (req, res) => {
 });
 
 //lo agregue unicamente para que no tire error en la principal del get
-productsRouter.get("/", async (req, res) => {
+cartsRouter.get("/", async (req, res) => {
 	try {
 		const cart = new CartManager();
-		await cart.initialize();
-		const getCart = await cart.getCartGeneral();
+		const getCart = await cart.getCarts();
 		res.status(200).send(getCart);
 	} catch (err) {
 		res.status(500).send({ error: err.message });
 	}
 });
 
-productsRouter.get("/:cid", async (req, res) => {
+cartsRouter.get("/:cid", async (req, res) => {
 	const { cid } = req.params;
 	try {
 		if (!cid) {
 			return res.status(400).send({ error: "id is not a number" });
 		}
-
 		const cart = new CartManager();
-		await cart.initialize();
-
-		const getOrderById = await cart.getOrderById(parseInt(cid));
-
-		if (!getOrderById) {
+		const getCart = await cart.getCart(cid);
+		if (!getCart) {
 			return res.status(404).send({ error: "cart not found" });
 		}
-
-		res.status(200).send({ cart: getOrderById });
+		res.status(200).send({ cart: getCart });
 	} catch (err) {
 		res.status(500).send({ error: err.message });
 	}
 });
 
-productsRouter.post("/:cid/products/:pid", async (req, res) => {
+cartsRouter.post("/:cid/products/:pid", async (req, res) => {
 	try {
 		const cart = new CartManager();
 		const productManager = new ProductManager();
 		const { cid, pid } = req.params;
-		await cart.initialize();
-
-		await productManager.initialize();
-
-		const getOrderById = await cart.getOrderById(parseInt(cid));
-		if (!getOrderById) {
+		const getCart = await cart.getCart(cid);
+		if (!getCart) {
 			return res.status(404).send({ error: "cart not found" });
 		}
-
-		const getProductById = await productManager.getProductsById(parseInt(pid));
+		const getProductById = await productManager.getProductById(pid);
 		if (!getProductById) {
 			return res.status(404).send({ error: "product not found" });
 		}
-
-		await cart.addProductToCart(parseInt(cid), parseInt(pid));
-
+		await cart.addProductToCart(cid, pid);
 		res.status(200).send({ message: "product added to cart", product: getProductById });
 	} catch (err) {
 		res.status(500).send({ error: err.message });
 	}
 });
 
-export default productsRouter;
+export default cartsRouter;

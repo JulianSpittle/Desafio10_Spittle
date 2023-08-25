@@ -6,9 +6,7 @@ class CartManager {
 		this.cart = [];
 		this.path = "./json/carrito.json";
 	}
-
 	static id = 1;
-
 	initialize = async () => {
 		try {
 			await fs.access(this.path);

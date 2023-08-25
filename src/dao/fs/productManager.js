@@ -13,10 +13,10 @@ class ProductManager {
 		try {
 			await fs.access(this.path);
 
-			const productParse = await this.getProductsGeneral();
+			const productParse = await this.getProducts();
 
 			if (productParse.length !== 0) {
-				const productsParse = await this.getProductsGeneral();
+				const productsParse = await this.getProducts();
 				this.products = productsParse;
 				ProductManager.id = Math.max(...this.products.map((item) => item.id)) + 1;
 			} else {
@@ -52,7 +52,7 @@ class ProductManager {
 		}
 	};
 
-	getProductsGeneral = async () => {
+	getProducts = async () => {
 		try {
 			const getProducts = await fs.readFile(this.path, "utf-8");
 			const getProductsParse = JSON.parse(getProducts);
@@ -64,7 +64,7 @@ class ProductManager {
 
 	deleteProduct = async (id) => {
 		try {
-			const readParse = await this.getProductsGeneral();
+			const readParse = await this.getProducts();
 			const deleteProduct = readParse.filter((item) => item.id !== id);
 			await fs.writeFile(this.path, JSON.stringify(deleteProduct, null, 2));
 		} catch (err) {
