@@ -5,115 +5,115 @@ const productsRouter = Router();
 const PM = new ProductManager();
 
 productsRouter.get("/", async (req, res) => {
-    let {limit} = req.query;
+    let { limit } = req.query;
     const products = await PM.getProducts(limit);
 
-    res.send({products});
+    res.send({ products });
 });
 
 productsRouter.get("/:pid", async (req, res) => {
     let pid = req.params.pid;
     const products = await PM.getProductById(pid);
-    
-    res.send({products});
+
+    res.send({ products });
 });
 
 productsRouter.post("/", async (req, res) => {
-    let {title, description, code, price, status, stock, category, thumbnails} = req.body;
+    let { title, description, code, price, status, stock, category, thumbnails } = req.body;
 
     if (!title) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Title!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Title!" });
         return false;
     }
 
     if (!description) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Description!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Description!" });
         return false;
     }
 
     if (!code) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Code!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Code!" });
         return false;
     }
 
     if (!price) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Price!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Price!" });
         return false;
     }
 
     status = !status && true;
 
     if (!stock) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Stock!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Stock!" });
         return false;
     }
 
     if (!category) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Category!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Category!" });
         return false;
     }
 
     if (!thumbnails) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Thumbnails!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Thumbnails!" });
         return false;
-    } 
+    }
 
-    const result = await PM.addProduct({title, description, code, price, status, stock, category, thumbnails}); 
+    const result = await PM.addProduct({ title, description, code, price, status, stock, category, thumbnails });
 
     if (result) {
-        res.send({status:"ok", message:"El Producto se agregó correctamente!"});
+        res.send({ status: "ok", message: "El Producto se agregó correctamente!" });
     } else {
-        res.status(500).send({status:"error", message:"Error! No se pudo agregar el Producto!"});
+        res.status(500).send({ status: "error", message: "Error! No se pudo agregar el Producto!" });
     }
 });
 
 productsRouter.put("/:pid", async (req, res) => {
     let pid = req.params.pid;
-    let {title, description, code, price, status, stock, category, thumbnails} = req.body;
+    let { title, description, code, price, status, stock, category, thumbnails } = req.body;
 
     if (!title) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Title!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Title!" });
         return false;
     }
 
     if (!description) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Description!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Description!" });
         return false;
     }
 
     if (!code) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Code!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Code!" });
         return false;
     }
 
     if (!price) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Price!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Price!" });
         return false;
     }
 
     status = !status && true;
 
     if (!stock) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Stock!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Stock!" });
         return false;
     }
 
     if (!category) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Category!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Category!" });
         return false;
     }
 
     if (!thumbnails) {
-        res.status(400).send({status:"error", message:"Error! No se cargó el campo Thumbnails!"});
+        res.status(400).send({ status: "error", message: "Error! No se cargó el campo Thumbnails!" });
         return false;
     }
 
-    const result = await PM.updateProduct(pid, {title, description, code, price, status, stock, category, thumbnails});
+    const result = await PM.updateProduct(pid, { title, description, code, price, status, stock, category, thumbnails });
 
     if (result) {
-        res.send({status:"ok", message:"El Producto se actualizó correctamente!"});
+        res.send({ status: "ok", message: "El Producto se actualizó correctamente!" });
     } else {
-        res.status(500).send({status:"error", message:"Error! No se pudo actualizar el Producto!"});
+        res.status(500).send({ status: "error", message: "Error! No se pudo actualizar el Producto!" });
     }
 });
 
@@ -122,9 +122,9 @@ productsRouter.delete("/:pid", async (req, res) => {
     const result = await PM.deleteProduct(pid)
 
     if (result) {
-        res.send({status:"ok", message:"El Producto se eliminó correctamente!"});
+        res.send({ status: "ok", message: "El Producto se eliminó correctamente!" });
     } else {
-        res.status(500).send({status:"error", message:"Error! No se pudo eliminar el Producto!"});
+        res.status(500).send({ status: "error", message: "Error! No se pudo eliminar el Producto!" });
     }
 });
 

@@ -1,23 +1,32 @@
 const socket = io();
-const messages = document.getElementById("messages");
 
-socket.on("messages", (data) => {
-    let salida = ``;
+Swal.fire({
+    title: "idenficate",
+    input: "text",
+    text: "ingresa nombre de usuario para identificarte en el chat",
+    inputValidator: (value) => {
+        return !value && 'ingresa un nombre de usuario para continuar'
+    },
+    allowOutsideClick: false //impide salir de la alerta al tocar fuera
+}).then(result => (
+    user = result.value
+));
 
-    data.forEach(item => {
-        salida += `<p class="card-text"><b>${item.user}:</b> <span class="fw-light">${item.message}</span></p>`;
-    });
+chatBox.addEventListener('keyup', evt => {
+    if (evt.key === "Enter") { //el mensaje se envia cuando el usuario aprieta enter
+        if (chatBox.value.trim().length > 0) { //corrobora que el mensaje no este vacio o con espacios unicamente
+            socket.emit("message", { user: user, message: chatBox.value });//emite el evento
+            chatBox.value = "";
+        }
+    }
+})
 
-    messages.innerHTML = salida;
-});
-
-const sendMessage = () => {
-    const user = document.getElementById("user");
-    const message = document.getElementById("message");
-    socket.emit("newMessage", {user:user.value, message:message.value});
-    user.value = "";
-    message.value = "";
-}
-
-const btnSendMessage = document.getElementById("btnSendMessage");
-btnSendMessage.onclick = sendMessage;
+//socket listener de "messageLogs"
+socket.on("messageLogs", data => {
+    let log = document.getElementById('messageLogs');
+    let messages = "";
+    data.forEach(message => {
+        messages = messages + `${message.user} dice: ${message.message}</br>`
+    })
+    log.innerHTML = messages;
+})

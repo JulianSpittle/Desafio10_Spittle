@@ -22,7 +22,7 @@ const agregarProducto = () => {
     const title = document.getElementById("title").value;
     const thumbnails = document.getElementById("thumbnails").value;
     const price = document.getElementById("price").value;
-    const product = {title:title, thumbnails:thumbnails, price:price};
+    const product = { title: title, thumbnails: thumbnails, price: price };
 
     socket.emit("nuevoProducto", product);
 }
