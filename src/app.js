@@ -1,24 +1,27 @@
 import express from "express";
-import __dirname from "./utils.js";
 import handlebars from "express-handlebars";
-import viewsRouter from "./routes/views.routes.js";
+import mongoose from 'mongoose';
+import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManager from "./dao/ProductManager.js";
-import mongoose from 'mongoose';
+import CartManager from './dao/CartManager.js';
+import ChatManager from "./dao/ChatManager.js";
+import viewsRouter from "./routes/views.routes.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import userRouter from './routes/users.router.js';
-import CartManager from './dao/CartManager.js';
 import chatRouter from "./routes/chat.router.js";
-import ChatManager from "./dao/ChatManager.js";
 
 const app = express();
 const port = 8080;
+const httpServer = app.listen(port, () => {
+	console.log(`Servidor corriendo en el puerto ${port}`);
+});
 
+app.engine('handlebars', handlebars.engine());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
-app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 app.use("/", viewsRouter);
@@ -29,16 +32,12 @@ app.use('/api/chats', chatRouter);
 
 mongoose.connect("mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority");
 
-const httpServer = app.listen(port, () => {
-	console.log(`Servidor corriendo en el puerto ${port}`);
-});
-
 export const io = new Server(httpServer);
 
 const productManager = new ProductManager();
 const cartsManager = new CartManager();
-// const chatManager = new ChatManager();
-// let messages = [];
+const chatManager = new ChatManager();
+let messages = [];
 
 io.on("connection", async (socket) => {
 	console.log("Nuevo cliente conectado");
@@ -80,11 +79,13 @@ io.on("connection", async (socket) => {
 	const listCarts = await cartsManager.getCarts();
 	io.emit("sendCarts", listCarts);
 
-	//chat
-	socket.on("newMessage", async (data) => {
-		CM.createMessage(data);
-		const messages = await CM.getMessages();
-		socket.emit("messages", messages);
+	//chats
+	const listChat = await chatManager.getMessages();
+	io.emit("sendChats", listChat);
+	//chatbox
+	socket.on("message", data => { //escucha el evento "message" del cliente
+		messages.push(data) //guarda el objeto en el arrray
+		io.emit('messageLogs', messages) //reenvia el log actualizado al evento "messageLogs@ en el index.js
 	})
 });
 

@@ -5,7 +5,7 @@ const router = express.Router();
 const PM = new ProductManager();
 
 router.get("/", async (req, res) => {
-    const products = await PM.getProducts();
+    const products = await PM.getProducts(req.query);
     res.render("home", { products });
 });
 

@@ -14,19 +14,8 @@ cartsRouter.post("/", async (req, res) => {
 	}
 });
 
-//lo agregue unicamente para que no tire error en la principal del get
-cartsRouter.get("/", async (req, res) => {
-	try {
-		const cart = new CartManager();
-		const getCart = await cart.getCarts();
-		res.status(200).send(getCart);
-	} catch (err) {
-		res.status(500).send({ error: err.message });
-	}
-});
-
 cartsRouter.get("/:cid", async (req, res) => {
-	const { cid } = req.params;
+	const { cid }  = req.params;
 	try {
 		if (!cid) {
 			return res.status(400).send({ error: "id is not a number" });
