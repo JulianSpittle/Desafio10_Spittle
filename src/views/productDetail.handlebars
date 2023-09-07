@@ -1,0 +1,22 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+<body>
+  <div class="product-detail-container">
+    <div class="details">
+      <img src={{product.thumbnails}}>
+      <h1>{{product.title}}</h1>
+      <p>{{product.description}}</p>
+      <p>Precio: {{product.price}}</p>
+
+      <p><button class="btn btn-dark" onclick="agregarProductoAlCarrito('{{product._id}}')">Agregar</button></p>
+    </div>
+  </div>
+</body>
+<script src="/src/public/js/cart.js"></script>
+<script src="/src/public/js/products.js"></script>
+</html>

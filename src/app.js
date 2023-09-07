@@ -1,16 +1,16 @@
 import express from "express";
-import handlebars from "express-handlebars";
+import Handlebars from "handlebars";
+import expressHandlebars from "express-handlebars";
 import mongoose from 'mongoose';
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManager from "./dao/ProductManager.js";
-import CartManager from './dao/CartManager.js';
-import ChatManager from "./dao/ChatManager.js";
 import viewsRouter from "./routes/views.routes.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
-import userRouter from './routes/users.router.js';
 import chatRouter from "./routes/chat.router.js";
+import { messageModel } from "./dao/models/message.model.js";
+import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
 
 const app = express();
 const port = 8080;
@@ -18,31 +18,43 @@ const httpServer = app.listen(port, () => {
 	console.log(`Servidor corriendo en el puerto ${port}`);
 });
 
-app.engine('handlebars', handlebars.engine());
+app.engine(
+	"handlebars",
+	expressHandlebars.engine({
+	  handlebars: allowInsecurePrototypeAccess(Handlebars),
+	})
+  );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 app.use("/", viewsRouter);
-app.use("/api/users", userRouter);
 app.use("/api/products", productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/api/chats', chatRouter);
+app.use('/api/chat', chatRouter);
+
 
 mongoose.connect("mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority");
 
-export const io = new Server(httpServer);
+export const socketServer = new Server(httpServer);
+app.set("socketServer", socketServer);
 
 const productManager = new ProductManager();
-const cartsManager = new CartManager();
-const chatManager = new ChatManager();
-let messages = [];
 
-io.on("connection", async (socket) => {
+//MongoDB
+mongoose.connection.on("connected", () => {
+	console.log("Conectado a MongoDB");
+  });
+  
+  mongoose.connection.on("error", (err) => {
+	console.error("Error conectando a MongoDB:", err);
+  });
+
+socketServer.on("connection", async (socket) => {
 	console.log("Nuevo cliente conectado");
-	const listProducts = await productManager.getProducts();
-	io.emit("sendProducts", listProducts);
+	const listProducts = await productManager.getProducts({ limit: 10 }); 
+	socket.emit("sendProducts", listProducts);
 	//products
 	socket.on("addProduct", async (product) => {
 		try {
@@ -56,7 +68,7 @@ io.on("connection", async (socket) => {
 			await productManager.addProduct(product);
 
 			const listProducts = await productManager.getProducts();
-			io.emit("sendProducts", listProducts);
+			socket.emit("sendProducts", listProducts);
 		} catch (err) {
 			socket.emit("error", { error: err.message });
 		}
@@ -70,22 +82,41 @@ io.on("connection", async (socket) => {
 			}
 			await productManager.deleteProduct(id);
 			const listProducts = await productManager.getProducts();
-			io.emit("productosupdated", listProducts);
+			socket.emit("productosupdated", listProducts);
 		} catch (err) {
 			socket.emit("error", { error: err.message });
 		}
 	});
 	//carts
 	const listCarts = await cartsManager.getCarts();
-	io.emit("sendCarts", listCarts);
+	socket.emit("sendCarts", listCarts);
 
 	//chats
-	const listChat = await chatManager.getMessages();
-	io.emit("sendChats", listChat);
-	//chatbox
-	socket.on("message", data => { //escucha el evento "message" del cliente
-		messages.push(data) //guarda el objeto en el arrray
-		io.emit('messageLogs', messages) //reenvia el log actualizado al evento "messageLogs@ en el index.js
-	})
+	const previousMessages = await messageModel.find().sort({ timestamp: 1 });
+  socket.emit("previous messages", previousMessages);
+
+  socket.on("message", (data) => {
+    console.log("Mensaje recibido del cliente:", data);
+  });
+
+  socket.on("socket_individual", (data) => {
+    console.log("Evento 'socket_individual' recibido:", data);
+  });
+
+  socket.on("chat message", async (message) => {
+    console.log("Received message object:", JSON.stringify(message, null, 2));
+
+    const newMessage = new messageModel({
+      user: message.user,
+      message: message.text,
+      timestamp: new Date(),
+    });
+    await newMessage.save();
+
+    socketServer.emit("chat message", {
+      user: message.user,
+      message: message.text,
+    });
+  });
 });
 

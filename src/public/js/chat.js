@@ -1,32 +1,30 @@
 const socket = io();
+document.getElementById('form').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-Swal.fire({
-    title: "idenficate",
-    input: "text",
-    text: "ingresa nombre de usuario para identificarte en el chat",
-    inputValidator: (value) => {
-        return !value && 'ingresa un nombre de usuario para continuar'
-    },
-    allowOutsideClick: false //impide salir de la alerta al tocar fuera
-}).then(result => (
-    user = result.value
-));
+  var user = document.getElementById('user').value;
+  var text = document.getElementById('input').value;
 
-chatBox.addEventListener('keyup', evt => {
-    if (evt.key === "Enter") { //el mensaje se envia cuando el usuario aprieta enter
-        if (chatBox.value.trim().length > 0) { //corrobora que el mensaje no este vacio o con espacios unicamente
-            socket.emit("message", { user: user, message: chatBox.value });//emite el evento
-            chatBox.value = "";
-        }
-    }
-})
+  socket.emit('chat message', { user: user, text: text });
+  
+  document.getElementById('input').value = '';
+  return false;
+});
 
-//socket listener de "messageLogs"
-socket.on("messageLogs", data => {
-    let log = document.getElementById('messageLogs');
-    let messages = "";
-    data.forEach(message => {
-        messages = messages + `${message.user} dice: ${message.message}</br>`
-    })
-    log.innerHTML = messages;
-})
+socket.on('chat message', function(message) {
+  var messages = document.getElementById('messages');
+  var li = document.createElement('li');
+  li.textContent = `${message.user}: ${message.message}`; 
+  messages.appendChild(li);
+});
+
+socket.on('previous messages', function(messages) {
+  console.log('Received previous messages:', messages);
+  var messagesList = document.getElementById('messages');
+  
+  messages.forEach(function(message) {
+      var li = document.createElement('li');
+      li.textContent = `${message.user}: ${message.message}`;  
+      messagesList.appendChild(li);
+  });
+});

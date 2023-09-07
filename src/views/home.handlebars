@@ -1,24 +1,22 @@
-<div class="container">
-    <div class="row">
-        {{#each products}}
-        <div class="col-md-4">
-            <div class="card border-0 mb-3">
-                <img src="{{this.thumbnails}}" class="img-fluid" alt="{{this.title}}">
-                <div class="card-body text-center">
-                    <p class="card-text">{{this.title}}<br><span class="text-danger">${{this.price}}</span></p>
-                </div>
-            </div>
-        </div>
-        {{/each}}
-        <div>
-            <input id="chatBox"> <!-- caja para escribir mensaje-->
-        </div>
-
-        <div>
-            <p id="messageLogs"></p> <!-- caja para ir colocando mensajes nuevos-->
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Productos</title>
+</head>
+<body>
+ <div class="container" id="home-color">
+  <div class="search-bar">
 </div>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/chat.js"></script>
+      <h1>Luco Objetos</h1>
+      <ul class="lista-productos">
+        {{#each products.payload}}
+          <div class="product"><img src={{this.thumbnails}}><a href="/products/{{this._id}}"><li>Nombre: {{this.title}}</li></a></div>
+        {{/each}}
+      </ul>
+</div>
+</body>
+</html>
+<script src="socket.io/socket.io.js"></script>
+<script src="/index.js"></script>
