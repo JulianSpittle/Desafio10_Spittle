@@ -11,7 +11,6 @@ import cartsRouter from "./routes/carts.router.js";
 import chatRouter from "./routes/chat.router.js";
 import { messageModel } from "./dao/models/message.model.js";
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
-import { messageModel } from "./src/dao/models/message.model.js";
 import sessionsRouter from "./routes/session.routes.js";
 import session from 'express-session';
 import MongoStore from 'connect-mongo';

@@ -1,4 +1,4 @@
-import { userModel } from "../dao/models/user.models.js";
+import { userModel } from "./models/user.model.js";
 
 class UserManager {
   async addUser(user) {
