@@ -5,3 +5,9 @@ Desde postman me andan bien los metodos DELETE, pero los PUT no entendi bien com
 El metodo get con el formato especificado devuelve correctamente.
 La ruta /products permite ver los productos con la paginacion, nose porque se rompe al hacer click para ir a la pagina dos, sigo con problemas en el frontend. En cuanto al boton "agregar al carrito", en un momento consegui hacerlo funcionar y luego dejo de funcionar y no puedo dar en la tecla sobre que fue lo que lo rompio.
 La vista /carts/:cid funciona correctamente
+
+
+Nueva entrega (Session & storage)
+
+Hola Ema! Aclaro que admin coder no esta registrado, hay que hacerlo
+adminCoder@coder.com con la contraseña admincoder123 ahi se registra como admin. 

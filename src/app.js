@@ -11,6 +11,10 @@ import cartsRouter from "./routes/carts.router.js";
 import chatRouter from "./routes/chat.router.js";
 import { messageModel } from "./dao/models/message.model.js";
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
+import { messageModel } from "./src/dao/models/message.model.js";
+import sessionsRouter from "./routes/session.routes.js";
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 const app = express();
 const port = 8080;
@@ -33,7 +37,17 @@ app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/chat', chatRouter);
-
+app.use("/api/sessions/", sessionsRouter);
+app.use(session({
+	secret: 'M5E7',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { secure: false },
+	store: MongoStore.create({ 
+	  mongoUrl: "mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority",
+	  collectionName: 'sessions'
+	})
+  }));
 
 mongoose.connect("mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority");
 

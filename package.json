@@ -1,8 +1,10 @@
 {
 	"dependencies": {
 		"@handlebars/allow-prototype-access": "^1.0.5",
+		"cookie-parser": "^1.4.6",
 		"express": "^4.18.2",
 		"express-handlebars": "^7.1.2",
+		"express-session": "^1.17.3",
 		"module": "^1.2.5",
 		"mongodb": "^5.8.1",
 		"mongoose": "^7.5.0",

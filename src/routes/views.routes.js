@@ -2,17 +2,36 @@ import express from "express";
 import ProductManager from "../dao/ProductManager.js";
 import CartManager from "../dao/CartManager.js"
 
+const checkSession = (req, res, next) => {
+  if (req.session && req.session.user) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+
+const checkAlreadyLoggedIn = (req, res, next) => {
+  if (req.session && req.session.user) {
+    console.log("Usuario ya autenticado, redirigiendo a /profile");
+    res.redirect("/profile");
+  } else {
+    console.log("Usuario no autenticado, procediendo...");
+    next();
+  }
+};
+
 const router = express.Router();
 const PM = new ProductManager();
 const CM = new CartManager();
 
-router.get("/", async (req, res) => {
+router.get("/",checkSession, async (req, res) => {
     const products = await PM.getProducts(req.query);
     res.render("home", { products });
 });
 
-router.get("/products", async (req, res) => {
+router.get("/products",checkSession, async (req, res) => {
     const products = await PM.getProducts(req.query);
+    const user = req.session.user;
     res.render("products", {products});
   });
 
@@ -47,6 +66,20 @@ router.get("/realtimeproducts", (req, res) => {
 
 router.get("/chat", (req, res) => {
     res.render("chat");
+});
+
+router.get("/login", checkAlreadyLoggedIn, (req, res) => {
+  res.render("login");
+});
+
+router.get("/register", checkAlreadyLoggedIn, (req, res) => {
+  res.render("register");
+});
+
+router.get("/profile", checkSession, (req, res) => {
+  const userData = req.session.user;
+
+  res.render("profile", { user: userData });
 });
 
 export default router;
