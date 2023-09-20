@@ -14,12 +14,16 @@ import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access
 import sessionsRouter from "./routes/session.routes.js";
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 const app = express();
 const port = 8080;
 const httpServer = app.listen(port, () => {
 	console.log(`Servidor corriendo en el puerto ${port}`);
 });
+export const socketServer = new Server(httpServer);
+app.set("socketServer", socketServer);
 
 app.engine(
 	"handlebars",
@@ -29,33 +33,33 @@ app.engine(
   );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname));
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
-app.use("/", viewsRouter);
-app.use("/api/products", productsRouter);
-app.use('/api/carts', cartsRouter);
-app.use('/api/chat', chatRouter);
-app.use("/api/sessions/", sessionsRouter);
 app.use(session({
-	secret: 'M5E7',
+	secret: 'L8I0',
 	resave: false,
-	saveUninitialized: true,
+	saveUninitialized: false,
 	cookie: { secure: false },
 	store: MongoStore.create({ 
 	  mongoUrl: "mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority",
 	  collectionName: 'sessions'
 	})
   }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  initializePassport();
 
-mongoose.connect("mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority");
-
-export const socketServer = new Server(httpServer);
-app.set("socketServer", socketServer);
+  app.use("/", viewsRouter);
+app.use("/api/products", productsRouter);
+app.use('/api/carts', cartsRouter);
+app.use('/api/chat', chatRouter);
+app.use("/api/sessions/", sessionsRouter);
 
 const productManager = new ProductManager();
 
-//MongoDB
+mongoose.connect("mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority");
+
 mongoose.connection.on("connected", () => {
 	console.log("Conectado a MongoDB");
   });

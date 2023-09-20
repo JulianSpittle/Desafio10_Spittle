@@ -64,6 +64,18 @@ cartsRouter.post("/", async (req, res) => {
 	}
   });
 
+  cartsRouter.put("/:cid", async (req, res) => {
+	const cid = req.params.cid;
+	const products = req.body.products;
+	const result = await CM.updateProducts(cid, products);
+  
+	if (result) {
+		res.send({status:"ok", message:"El producto se agregó correctamente!"});
+	} else {
+		res.status(400).send({status:"error", message:"Error! No se pudo agregar el Producto al Carrito!"});
+	}
+  });
+
   cartsRouter.delete("/:cid/products/:pid", async (req, res) => {
 	const cid = req.params.cid;
 	const pid = req.params.pid;

@@ -1,14 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+</head>
+<body>
+     <div class="nav-products">
+        <h1 class="title-home">LUCO</h1>
+   <div class="container-nav">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/products">Products</a></li>
+      <li><a href="/profile">Profile</a></li>
+    </ul>
+</div>
+     </div>
 <div class="container">
     <div class="row">
+        <div class="user">
+            <p>Bienvenido, {{user.first_name}} {{user.last_name}}!</p>
+        </div>
         {{#each products.payload}}
             <div class="col-md-4">
                 <div class="card border-0 mb-3">
                     <a href="/products/{{this._id}}" class="text-decoration-none">
-                        <img src="{{this.thumbnails}}" class="img-fluid" alt="{{this.title}}">
+                        <div class="marco-img"><img src="{{this.thumbnails}}" class="img-fluid" alt="{{this.title}}"></div>
                     </a>
                     <div class="card-body text-center">
-                        <p class="card-text text-dark">{{this.title}}<br><span class="text-danger">${{this.price}}</span></p>
-                        <p><button class="btn btn-dark" onclick="agregarProductoAlCarrito('{{this._id}}')">Agregar (+)</button></p>
+                        <p class="card-text text-dark">{{this.title}}<br><span>${{this.price}}</span></p>
+                        <p  class="agregar"><button onclick="agregarProductoAlCarrito('{{this._id}}')">Agregar</button></p>
                     </div>
                 </div>
             </div>
@@ -47,5 +69,8 @@
     </div>
 </div>
 
-<script src="/src/public/js/cart.js"></script>
-<script src="/src/public/js/products.js"></script>
+<script src="/src/public/cart.js"></script>
+    
+</body>
+</html>
+

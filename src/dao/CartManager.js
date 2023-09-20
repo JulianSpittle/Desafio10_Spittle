@@ -105,6 +105,19 @@ class CartManager {
     }
   }
   
+  async updateProducts(cid, products) {
+    try {
+        await cartModel.updateOne({_id:cid}, {products:products}, {new:true, upsert:true});
+        console.log("Product updated!");
+
+        return true;
+    } catch (error) {
+        console.log("Not found!");
+        
+        return false;
+    }
+}
+
   async deleteProductFromCart(cid, pid) {
     try {
       if (mongoose.Types.ObjectId.isValid(cid)) {
