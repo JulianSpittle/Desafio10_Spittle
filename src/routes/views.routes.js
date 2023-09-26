@@ -86,7 +86,10 @@ router.get("/restore", async (req, res) => {
 });
 
 router.get("/faillogin", (req, res) => {
-  res.status(401).send({status: "Error", message: "Usuario y/o contraseña incorrectos"});
+  res.status(401).json({
+    status: "error",
+    message: "Login failed. Invalid username or password.",
+  });
 });
 
 router.get("/failregister", async (req, res) => {

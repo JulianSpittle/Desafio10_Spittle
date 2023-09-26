@@ -1,1 +1,1 @@
-Se implementó el nuevo login con passport.
+Actualizado el login y el model de usuario para la segunda practica integradora!

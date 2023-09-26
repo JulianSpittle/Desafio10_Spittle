@@ -16,6 +16,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = 8080;
