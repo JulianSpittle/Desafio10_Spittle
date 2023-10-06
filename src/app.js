@@ -6,9 +6,9 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManager from "./dao/ProductManager.js";
 import viewsRouter from "./routes/views.routes.js";
-import productsRouter from "./routes/products.router.js";
-import cartsRouter from "./routes/carts.router.js";
-import chatRouter from "./routes/chat.router.js";
+import productsRouter from "./routes/products.routes.js";
+import cartsRouter from "./routes/carts.routes.js";
+import chatRouter from "./routes/chat.routes.js";
 import { messageModel } from "./dao/models/message.model.js";
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
 import sessionsRouter from "./routes/session.routes.js";
@@ -17,13 +17,18 @@ import MongoStore from 'connect-mongo';
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
+import { MONGO_URL, SECRET_KEY_SESSION, PORT } from "./config/config.js";
+require('dotenv').config();
+            
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
+
 const httpServer = app.listen(port, () => {
 	console.log(`Servidor corriendo en el puerto ${port}`);
 });
 export const socketServer = new Server(httpServer);
+
 app.set("socketServer", socketServer);
 
 app.engine(
@@ -37,29 +42,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
-app.use(session({
-	secret: 'L8I0',
-	resave: false,
-	saveUninitialized: false,
-	cookie: { secure: false },
-	store: MongoStore.create({ 
-	  mongoUrl: "mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority",
-	  collectionName: 'sessions'
+app.use(
+	session({
+	  secret: process.env.SECRET_KEY_SESSION,
+	  resave: false,
+	  saveUninitialized: false,
+	  cookie: { secure: false },
+	  store: MongoStore.create({
+		mongoUrl: process.env.MONGO_URL,
+		collectionName: "sessions",
+	  }),
 	})
-  }));
+  );
+  app.use(cookieParser());
+
   app.use(passport.initialize());
   app.use(passport.session());
   initializePassport();
-
-  app.use("/", viewsRouter);
+  
+app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/chat', chatRouter);
 app.use("/api/sessions/", sessionsRouter);
 
+
 const productManager = new ProductManager();
 
-mongoose.connect("mongodb+srv://julianspittle96:csbETVhM9g62GvIz@cluster0.wzsgzlg.mongodb.net/ecommerce?retryWrites=true&w=majority");
+mongoose.connect(process.env.MONGO_URL);
 
 mongoose.connection.on("connected", () => {
 	console.log("Conectado a MongoDB");

@@ -1,83 +1,66 @@
 import { userModel } from "./models/user.model.js";
+import { createHash, isValidPassword } from "../utils.js";
 
 class UserManager {
-  async addUser(user) {
+  async addUser({ first_name, last_name, email, age, password, role }) { 
     try {
-      const existingUser = await userModel.findOne({ email: user.email });
+      const existingUser = await userModel.findOne({ email });
+  
       if (existingUser) {
-        console.error("El correo electrónico ya está registrado.");
-        return false;
+        console.log("User already exists");
+        return null;
       }
-
-      if (
-        user.email === "adminCoder@coder.com" &&
-        user.password === "admincoder123"
-      ) {
-        user.role = "admin";
-      } else {
-        user.role = "usuario";
-      }
-      await userModel.create(user);
-      console.log("User added!");
-
-      return true;
+  
+      const hashedPassword = createHash(password);
+      const user = await userModel.create({
+        first_name,
+        last_name,
+        email,
+        age,
+        password: hashedPassword,
+        role  
+      });
+  
+      console.log("User added!", user);
+      return user;
     } catch (error) {
-      console.error("Error durante el register:", error);
-      return false;
+      console.error("Error adding user:", error);
+      throw error;
     }
   }
-
-  async login(user, pass, req) {
+  async login(user, pass) {
     try {
-      const userLogged =
-        (await userModel.findOne({ email: user, password: pass })) || null;
+      const userLogged = await userModel.findOne({ email: user });
 
-      if (userLogged) {
+      if (userLogged && isValidPassword(userLogged, pass)) {
         const role =
           userLogged.email === "adminCoder@coder.com" ? "admin" : "usuario";
 
-        req.session.user = {
-          id: userLogged._id,
-          email: userLogged.email,
-          first_name: userLogged.first_name,
-          last_name: userLogged.last_name,
-          role: role,
-        };
-        const userToReturn = userLogged;
-        return userToReturn;
+        return userLogged;
       }
-      return false;
+      return null;
     } catch (error) {
       console.error("Error durante el login:", error);
-      return false;
+      throw error;
     }
   }
 
-  async getUserByEmail(user) {
+  async restorePassword(email, hashedPassword) {
     try {
-      const userRegisteredBefore =
-        (await userModel.findOne([{ email: user }])) || null;
-      if (userRegisteredBefore) {
-        console.log("Mail registrado anteriormente");
-        return user;
+      const user = await userModel.findOne({ email });
+      if (!user) {
+        console.log("Usuario no encontrado.");
+        return false;
       }
 
+      user.password = hashedPassword;
+
+      await user.save();
+
+      console.log("Contraseña restaurada correctamente.");
       return true;
     } catch (error) {
-      return false;
-    }
-  }
-
-  async getUserByID(id) {
-    try {
-      const userID = (await userModel.findOne([{ _id: id }])) || null;
-      if (userID) {
-        console.log(userID);
-        return user;
-      }
-
-      return true;
-    } catch (error) {
+      console.error("Error restoring password:", error);
       return false;
     }
   }

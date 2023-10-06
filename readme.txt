@@ -1,1 +1,1 @@
-Actualizado el login y el model de usuario para la segunda practica integradora!
+Actualizado el proyecto por capas
