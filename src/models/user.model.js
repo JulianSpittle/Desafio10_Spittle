@@ -9,10 +9,7 @@ const userSchema = new mongoose.Schema({
   },
   age: Number,
   password: String,
-  cart: {
-    type: String,
-    ref: "carts",
-  },
+  cart: {type: mongoose.Schema.Types.ObjectId, ref:"carts"},
   role: String,
 });
 

@@ -1,1 +1,1 @@
-Actualizado el proyecto por capas
+Actualizado el proyecto en cuanto a reestructuracion y mensajeria, falta testeo lo continuo en los proximos dias.

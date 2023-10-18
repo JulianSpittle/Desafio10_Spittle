@@ -6,29 +6,45 @@ class AuthController {
   }
 
   async login(req, res) {
+    console.log("Login request received:", req.body);
+
     const { email, password } = req.body;
-    const userData = await this.authService.login(email, password); 
-    console.log("User data retrieved:", userData);  
-  
-    if (!userData || !userData.user) { 
-      return res.status(401).json({ status: "error", message: "Invalid credentials" });
+    const userData = await this.authService.login(email, password);
+    console.log("User data retrieved:", userData);
+
+    if (!userData || !userData.user) {
+      console.log("Invalid credentials");
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid credentials" });
     }
-  
-    req.session.user = {
-      id: userData.user._id,  
-      email: userData.user.email,
-      first_name: userData.user.first_name,
-      last_name: userData.user.last_name,
-      role: userData.user.role,
-    };
 
-    res.cookie('coderCookieToken', userData.token, { httpOnly: true, secure: false });
-  
-    console.log('Role retrieved:', userData.user.role);
-  
-    return res.status(200).json({ status: "success", user: userData.user, redirect: "/products" });
+    if (userData && userData.user) {
+      console.log("Setting session and cookie");
+      req.session.user = {
+        id: userData.user.id || userData.user._id, 
+        email: userData.user.email,
+        first_name: userData.user.firstName || userData.user.first_name, 
+        last_name: userData.user.lastName || userData.user.last_name, 
+        age: userData.user.age,
+        role: userData.user.role
+      };
+    }
+
+    console.log("Full user data object:", userData.user);
+
+    console.log("Assigned session:", req.session); 
+
+    res.cookie("coderCookieToken", userData.token, {
+      httpOnly: true,
+      secure: false,
+    });
+
+    console.log("Login successful, redirecting to /products");
+    return res
+      .status(200)
+      .json({ status: "success", user: userData.user, redirect: "/products" });
   }
-
   async githubCallback(req, res) {
     console.log("Inside AuthController githubCallback");
     try {

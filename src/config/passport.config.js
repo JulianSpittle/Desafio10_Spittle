@@ -1,11 +1,17 @@
 import passport from "passport";
 import jwt from "passport-jwt";
 import local from "passport-local";
-import { userModel } from "../dao/models/user.model.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { userModel } from "../models/user.models.js";
+import { createHash, isValidPassword } from "../../utils.js";
 import GitHubStrategy from "passport-github2";
 import AuthService from "../services/authService.js";
-import { JWT_SECRET, CLIENT_ID_GITHUB, CLIENT_SECRET_GITHUB, ADMIN_EMAIL, ADMIN_PASSWORD } from "../config/config.js";
+import {
+  JWT_SECRET,
+  CLIENT_ID_GITHUB,
+  CLIENT_SECRET_GITHUB,
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+} from "../config/config.js";
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
@@ -37,7 +43,10 @@ const initializePassport = () => {
 
           console.log("Rol antes de la asignación:", user.role);
 
-          if (user.email == process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+          if (
+            user.email == process.env.ADMIN_EMAIL &&
+            password === process.env.ADMIN_PASSWORD
+          ) {
             console.log("Asignando role de admin");
             user.role = "admin";
           } else {
@@ -92,6 +101,7 @@ const initializePassport = () => {
         secretOrKey: process.env.JWT_SECRET,
       },
       async (jwt_payload, done) => {
+        console.log("JWT Payload:", jwt_payload);
         try {
           const user = await userModel.findOne({ email: jwt_payload.email });
           if (!user) {
@@ -112,7 +122,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID_GITHUB,
       clientSecret: process.env.CLIENT_SECRET_GITHUB,
-      callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+      callbackURL: "http://localhost:8000/api/sessions/githubcallback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -146,8 +156,10 @@ const cookieExtractor = (req) => {
   let token = null;
 
   if (req && req.cookies) {
+    console.log("Cookies:", req.cookies);
     token = req.cookies["coderCookieToken"];
   }
 
+  console.log("Token Extracted:", token);
   return token;
 };

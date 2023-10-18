@@ -1,5 +1,6 @@
 import ProductService from "../services/productService.js";
-import { socketServer } from "../app.js";
+import { socketServer } from "../../app.js";
+import mongoose from "mongoose";
 
 class ProductController {
   constructor() {
@@ -207,25 +208,48 @@ class ProductController {
     try {
       const pid = req.params.pid;
 
+      if (!mongoose.Types.ObjectId.isValid(pid)) {
+        console.log("ID del producto no válido");
+        res.status(400).send({
+          status: "error",
+          message: "ID del producto no válido",
+        });
+        return;
+      }
+
+      const product = await this.productService.getProductById(pid);
+
+      if (!product) {
+        console.log("Producto no encontrado");
+        res.status(404).send({
+          status: "error",
+          message: "Producto no encontrado",
+        });
+        return;
+      }
+
       const wasDeleted = await this.productService.deleteProduct(pid);
 
       if (wasDeleted) {
+        console.log("Producto eliminado exitosamente");
         res.send({
           status: "ok",
-          message: "El Producto se eliminó correctamente!",
+          message: "Producto eliminado exitosamente",
         });
         socketServer.emit("product_deleted", { _id: pid });
       } else {
+        console.log("Error eliminando el producto");
         res.status(500).send({
           status: "error",
-          message: "Error! No se pudo eliminar el Producto!",
+          message: "Error eliminando el producto",
         });
       }
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send({ status: "error", message: "Internal server error." });
+      res.status(500).send({
+        status: "error",
+        message: "Error interno del servidor",
+      });
     }
   }
 }

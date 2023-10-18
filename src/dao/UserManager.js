@@ -1,16 +1,17 @@
-import { userModel } from "./models/user.model.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { userModel } from "../models/user.models.js";
+import { createHash, isValidPassword } from "../../utils.js";
+import UserDTO from "./dto/user.dto.js";
 
 class UserManager {
-  async addUser({ first_name, last_name, email, age, password, role }) { 
+  async addUser({ first_name, last_name, email, age, password, role }) {
     try {
       const existingUser = await userModel.findOne({ email });
-  
+
       if (existingUser) {
         console.log("User already exists");
         return null;
       }
-  
+
       const hashedPassword = createHash(password);
       const user = await userModel.create({
         first_name,
@@ -18,9 +19,9 @@ class UserManager {
         email,
         age,
         password: hashedPassword,
-        role  
+        role,
       });
-  
+
       console.log("User added!", user);
       return user;
     } catch (error) {
@@ -40,7 +41,7 @@ class UserManager {
       }
       return null;
     } catch (error) {
-      console.error("Error durante el login:", error);
+      console.error("Error durante el inicio de sesión:", error);
       throw error;
     }
   }

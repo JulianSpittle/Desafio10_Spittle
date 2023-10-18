@@ -1,16 +1,19 @@
 import express from "express";
 import ProductManager from "../dao/ProductManager.js";
 import CartManager from "../dao/cartManager.js";
+import cartControllers from "../controllers/cartControllers.js";
 
 const checkSession = (req, res, next) => {
+  console.log('Checking session:', req.session);
+
   if (req.session && req.session.user) {
-    console.log("session en Checksession", req.session)
+    console.log('Session exists:', req.session.user);
     next();
   } else {
+    console.log('No session found, redirecting to /login');
     res.redirect("/login");
   }
 };
-
 const checkAlreadyLoggedIn = (req, res, next) => {
   if (req.session && req.session.user) {
     console.log("Usuario ya autenticado, redirigiendo a /profile");
@@ -27,12 +30,13 @@ const CM = new CartManager();
 
 router.get("/", checkSession, async (req, res) => {
   const products = await PM.getProducts(req.query);
-  res.render("home", { products });
+  res.render("home", { products});
 });
 
 router.get("/products", checkSession, async (req, res) => {
   const products = await PM.getProducts(req.query);
   const user = req.session.user;
+  
   console.log(user);
   res.render("products", { products, user });
 });
@@ -62,6 +66,11 @@ router.get("/carts/:cid", async (req, res) => {
   }
 });
 
+router.post("/carts/:cid/purchase", async (req, res) => {
+  const cid = req.params.cid;
+  cartControllers.getPurchase(req, res, cid);
+});
+
 router.get("/realtimeproducts", (req, res) => {
   res.render("realTimeProducts");
 });
@@ -79,7 +88,11 @@ router.get("/register", checkAlreadyLoggedIn, (req, res) => {
 });
 
 router.get("/profile", checkSession, (req, res) => {
+  console.log('Inside /profile route');
+
   const userData = req.session.user;
+  console.log('User data:', userData);
+
   res.render("profile", { user: userData });
 });
 

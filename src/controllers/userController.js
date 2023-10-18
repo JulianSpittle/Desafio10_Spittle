@@ -1,4 +1,5 @@
 import UserService from "../services/userServices.js";
+import UserRespose from "../dao/dto/user.response.dto.js";
 
 class UserController {
   constructor() {
@@ -13,12 +14,15 @@ class UserController {
       email,
       age,
       password,
-      role
+      role,
     });
 
-    return res.status(response.status === "success" ? 200 : 400).json(response);
+    return res.status(response.status === "success" ? 200 : 400).json({
+      status: response.status,
+      data: response.user,
+      redirect: response.redirect,
+    });
   }
-
   async restorePassword(req, res) {
     const { user, pass } = req.query;
     try {
@@ -46,8 +50,11 @@ class UserController {
   }
 
   currentUser(req, res) {
-    if (req.user) {
-      return res.send({ status: "OK", payload: req.user });
+    if (req.session.user) {
+      return res.send({
+        status: "OK",
+        payload: new UserRespose(req.session.user),
+      });
     } else {
       return res
         .status(401)
