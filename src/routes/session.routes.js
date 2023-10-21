@@ -1,7 +1,7 @@
 import express from "express";
 import UserManager from "../dao/UserManager.js";
 import passport from "passport";
-import { createHash, passportCall, authorization } from "../utils.js";
+import { createHash, passportCall, authorization } from "../../utils.js";
 import UserController from "../controllers/userController.js";
 import AuthController from "../controllers/authController.js";
 

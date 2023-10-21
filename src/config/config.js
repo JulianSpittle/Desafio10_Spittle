@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config({path:"./src/config/.env"});
 
 export const PORT= 8080;
-export const MONGO_URL= process.env.MONGO_URL;
+export const MONGODB_CNX_STR = process.env.MONGODB_CNX_STR;
 export const SECRET_KEY_SESSION= process.env.SECRET_KEY_SESSION;
 export const JWT_SECRET= process.env.JWT_SECRET;
 export const CLIENT_ID_GITHUB= process.env.CLIENT_ID_GITHUB;

@@ -6,18 +6,17 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManager from "./src/dao/ProductManager.js";
 import viewsRouter from "./src/routes/views.routes.js";
-import productsRouter from "./src/routes/product.routes.js";
-import cartsRouter from "./src/routes/cart.routes.js";
-import chatRouter from ".src//routes/chat.routes.js";
+import productsRouter from "./src/routes/products.routes.js";
+import cartsRouter from "./src/routes/carts.routes.js";
 import { messageModel } from "./src/models/message.model.js";
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
-import sessionsRouter from "./src/routes/sessions.routes.js";
+import sessionsRouter from "./src/routes/session.routes.js";
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
 import cookieParser from "cookie-parser";
-import { MONGO_URL, SECRET_KEY_SESSION, PORT } from "./src/config/config.js";
+import { SECRET_KEY_SESSION, PORT } from "./src/config/config.js";
 import cors from "cors";
 import DBManager from './src/mongo/ds.js';
 import emailRouter from "./src/routes/email.routes.js";
@@ -71,11 +70,10 @@ app.use(
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/api/chat', chatRouter);
 app.use("/api/sessions/", sessionsRouter);
 
 
-const ProductManager = new ProductManager();
+const PM = new ProductManager();
 
 mongoose.connect(process.env.MONGO_URL);
 

@@ -1,4 +1,4 @@
-import { userModel } from "../models/user.models.js";
+import { userModel } from "../models/user.model.js";
 import { createHash, isValidPassword } from "../../utils.js";
 import UserDTO from "./dto/user.dto.js";
 

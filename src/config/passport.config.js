@@ -1,7 +1,7 @@
 import passport from "passport";
 import jwt from "passport-jwt";
 import local from "passport-local";
-import { userModel } from "../models/user.models.js";
+import { userModel } from "../models/user.model.js";
 import { createHash, isValidPassword } from "../../utils.js";
 import GitHubStrategy from "passport-github2";
 import AuthService from "../services/authService.js";
@@ -122,7 +122,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID_GITHUB,
       clientSecret: process.env.CLIENT_SECRET_GITHUB,
-      callbackURL: "http://localhost:8000/api/sessions/githubcallback",
+      callbackURL: "http://localhost:8080/api/sessions/githubcallback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
