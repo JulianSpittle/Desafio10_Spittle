@@ -1,1 +1,1 @@
-Actualizado el proyecto en cuanto a reestructuracion y mensajeria, falta testeo lo continuo en los proximos dias.
+Actualizado el proyecto en cuanto a mocks y errores.
