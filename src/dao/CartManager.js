@@ -17,14 +17,17 @@ class CartManager {
   }
 
   async getCart(id) {
-    if (this.validateId(id)) {
-      return (await cartModel.findOne({ _id: id }).lean()) || null;
-    } else {
-      console.log("Not found!");
+    console.log('Getting cart with ID:', id);  
 
+    if (this.validateId(id)) {
+      const cart = await cartModel.findOne({ _id: id }).lean();
+      console.log('Retrieved cart:', cart);  
+      return cart || null;
+    } else {
+      console.log('Not found!');
       return null;
     }
-  }
+}
 
   async getCarts() {
     return await cartModel.find().lean();

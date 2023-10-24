@@ -2,31 +2,26 @@ import express from "express";
 import ProductManager from "../dao/ProductManager.js";
 import CartManager from "../dao/cartManager.js";
 import cartControllers from "../controllers/cartControllers.js";
-
-const checkSession = (req, res, next) => {
-  console.log('Checking session:', req.session);
-
-  if (req.session && req.session.user) {
-    console.log('Session exists:', req.session.user);
-    next();
-  } else {
-    console.log('No session found, redirecting to /login');
-    res.redirect("/login");
-  }
-};
-const checkAlreadyLoggedIn = (req, res, next) => {
-  if (req.session && req.session.user) {
-    console.log("Usuario ya autenticado, redirigiendo a /profile");
-    res.redirect("/profile");
-  } else {
-    console.log("Usuario no autenticado, procediendo...");
-    next();
-  }
-};
+import { checkAlreadyLoggedIn, checkSession } from "../middlewares/ingreso.js";
 
 const router = express.Router();
 const PM = new ProductManager();
 const CM = new CartManager();
+
+async function loadUserCart(req, res, next) {
+  if (req.session && req.session.user) {
+    const cartId = req.session.user.cart;
+    console.log('Cart ID:', cartId);  
+
+    const cartManager = new CartManager();
+    const cart = await cartManager.getCart(cartId);
+    console.log('Cart:', cart); 
+
+    req.cart = cart;
+  }
+  next();
+}
+
 
 router.get("/", checkSession, async (req, res) => {
   const products = await PM.getProducts(req.query);
@@ -51,9 +46,8 @@ router.get("/products/:pid", async (req, res) => {
   }
 });
 
-router.get("/carts/:cid", async (req, res) => {
-  const cid = req.params.cid;
-  const cart = await CM.getCart(cid);
+router.get("/carts", loadUserCart, async (req, res) => {
+  const cart = req.cart;
 
   if (cart) {
     console.log(JSON.stringify(cart, null, 4));
@@ -65,6 +59,8 @@ router.get("/carts/:cid", async (req, res) => {
     });
   }
 });
+
+
 
 router.post("/carts/:cid/purchase", async (req, res) => {
   const cid = req.params.cid;
@@ -88,11 +84,8 @@ router.get("/register", checkAlreadyLoggedIn, (req, res) => {
 });
 
 router.get("/profile", checkSession, (req, res) => {
-  console.log('Inside /profile route');
-
   const userData = req.session.user;
   console.log('User data:', userData);
-
   res.render("profile", { user: userData });
 });
 

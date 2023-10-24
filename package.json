@@ -13,7 +13,7 @@
 		"express-handlebars": "^7.1.2",
 		"express-session": "^1.17.3",
 		"jsonwebtoken": "^9.0.2",
-		"module": "^1.2.5",
+		"module": "^1.0.0",
 		"mongodb": "^5.8.1",
 		"mongoose": "^7.5.0",
 		"mongoose-paginate-v2": "^1.7.31",

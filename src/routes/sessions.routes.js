@@ -4,6 +4,7 @@ import passport from "passport";
 import { createHash, passportCall, authorization } from "../../utils.js";
 import UserController from "../controllers/userController.js";
 import AuthController from "../controllers/authController.js";
+import errorHandler from "../middlewares/errorHandler.js";
 
 const PRIVATE_KEY = "S3CR3T0";
 
@@ -12,7 +13,7 @@ const UM = new UserManager();
 const userController = new UserController();
 const authController = new AuthController();
 
-router.post("/login", (req, res) => authController.login(req, res));
+router.post("/login", (req, res, next) => authController.login(req, res, next));
 
 router.post("/register", userController.register.bind(userController));
 
@@ -38,5 +39,7 @@ router.get("/current", passportCall("jwt"), authorization("user"), (req, res) =>
   console.log(req.cookies); 
   userController.currentUser(req, res);
 });
+
+router.use(errorHandler);
 
 export default router;

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config({path:"./src/config/.env"});
+dotenv.config();
 
 export const PORT= 8080;
 export const MONGODB_CNX_STR = process.env.MONGODB_CNX_STR;
