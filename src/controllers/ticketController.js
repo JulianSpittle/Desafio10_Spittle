@@ -1,4 +1,4 @@
-import TicketService from "../services/ticketSrvice.js";
+import TicketService from "../services/ticketService.js";
 
 class TicketController {
   constructor() {
