@@ -17,8 +17,6 @@ class CartManager {
   }
 
   async getCart(id) {
-    console.log('Getting cart with ID:', id);  
-
     if (this.validateId(id)) {
       const cart = await cartModel.findOne({ _id: id }).lean();
       console.log('Retrieved cart:', cart);  
@@ -35,8 +33,6 @@ class CartManager {
 
   async addProductToCart(cid, pid, quantity) {
     try {
-      console.log(`Adding product ${pid} to cart ${cid}`);
-
       if (
         mongoose.Types.ObjectId.isValid(cid) &&
         mongoose.Types.ObjectId.isValid(pid)
@@ -46,7 +42,6 @@ class CartManager {
         console.log("Stock antes de agregar al carrito:", product.stock);
 
         if (!product) {
-          console.log("Product not found!");
           return {
             status: "error",
             message: "Producto no encontrado!",
@@ -62,14 +57,11 @@ class CartManager {
           { $inc: { "products.$.quantity": 1 } }
         );
 
-        console.log("Update result:", updateResult);
         if (updateResult.matchedCount === 0) {
           const pushResult = await cartModel.updateOne(
             { _id: cid },
             { $push: { products: { product: pid, quantity: 1 } } }
           );
-
-          console.log("Push result:", pushResult);
         }
 
         return {

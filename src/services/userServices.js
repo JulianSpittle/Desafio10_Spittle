@@ -1,5 +1,5 @@
 import UserManager from "../dao/UserManager.js";
-import { ADMIN_PASSWORD, ADMIN_EMAIL } from "../config/config.js";
+import { ENV_CONFIG } from "../config/config.js";
 import CartManager from "../dao/cartManager.js";
 
 class UserService {
@@ -17,7 +17,7 @@ class UserService {
       }
 
       const role =
-        email == ADMIN_EMAIL && password === ADMIN_PASSWORD ? "admin" : "user";
+        email == ENV_CONFIG.adminEmail && password === ENV_CONFIG.adminPassword ? "admin" : "user";
 
       const cartId = cartResponse.id;
       console.log("Cart ID:", cartId);

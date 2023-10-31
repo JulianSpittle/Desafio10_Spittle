@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
-import { PERSISTENCE, MONGODB_CNX_STR } from '../config/config.js';
+import { ENV_CONFIG } from '../config/config.js';
+import { devLogger } from '../config/logger.js';
+
 
 class DBManager {
   constructor() {
-    if (PERSISTENCE === 'MONGO') {
+    if (ENV_CONFIG.persistence === 'MONGO') {
       this.connectToMongoDB();
     } else {
       this.contacts = [];  
@@ -12,13 +14,13 @@ class DBManager {
 
   async connectToMongoDB() {
     try {
-      await mongoose.connect(MONGODB_CNX_STR, {
+      await mongoose.connect(ENV_CONFIG.mongoUrl, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
-      console.log('Conectado a MongoDB');
+      devLogger.info('Conectado a MongoDB');
     } catch (error) {
-      console.error('Error conectando a MongoDB:', error);
+      devLogger.error('Error conectando a MongoDB:', error);
     }
   }
 }

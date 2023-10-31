@@ -1,12 +1,12 @@
 import nodemailer from "nodemailer";
-import { EMAIL_PASS, EMAIL_USER } from "../config/config.js";
+import { ENV_CONFIG } from "../config/config.js";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   port: 587,
   auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS,
+    user: ENV_CONFIG.emailUser,
+    pass: ENV_CONFIG.emailPassword,
   },
 });
 
@@ -19,16 +19,16 @@ transporter.verify(function (error, success) {
 });
 
 const mailOptions = {
-  from: "Coder Test " + EMAIL_USER,
-  to: EMAIL_USER,
+  from: "Coder Test " + ENV_CONFIG.emailUser,
+  to: ENV_CONFIG.emailUser,
   subject: "Correo de prueba Coderhouse Programacion Backend.",
   html: "<div><h1>Esto es un Test de envio de correos con Nodemailer!</h1></div>",
   attachments: [],
 };
 
 const mailOptionsWithAttachments = {
-  from: "Coder Test " + EMAIL_USER,
-  to: EMAIL_USER,
+  from: "Coder Test " + ENV_CONFIG.emailUser,
+  to: ENV_CONFIG.emailUser,
   subject: "Correo de prueba Coderhouse Programacion Backend.",
   html: `<div>
               <h1>Esto es un Test de envio de correos con Nodemailer!</h1>
@@ -48,14 +48,14 @@ export const sendEmail = (req, res) => {
   try {
     let result = transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(400).send({ message: "Error", payload: error });
       }
-      console.log("Message sent: %s", info.messageId);
+      req.logger.info("Message sent: %s", info.messageId);
       res.send({ message: "Success!", payload: info });
     });
   } catch (error) {
-    console.error(error);
+    req.logger.error(error);
     res
       .status(500)
       .send({

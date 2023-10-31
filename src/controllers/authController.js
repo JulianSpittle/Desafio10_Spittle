@@ -1,5 +1,5 @@
 import AuthService from "../services/authService.js";
-import CustomError from "../services/errors/CustomError.js";
+import CustomError from "../services/errors/customError.js";
 import EErrors from "../services/errors/errors-enum.js";
 import { generateAuthenticationErrorInfo } from "../services/errors/messages/user-auth-error.js";
 
@@ -10,14 +10,12 @@ class AuthController {
 
   async login(req, res, next) {
     try {
-      console.log("Login request received:", req.body);
-
       const { email, password } = req.body;
       const userData = await this.authService.login(email, password);
-      console.log("User data retrieved:", userData);
+      req.logger.info("User data retrieved:", userData);
 
       if (!userData || !userData.user) {
-        console.log("Invalid credentials");
+        req.logger.error("Invalid credentials");
         const customError = new CustomError({
           name: "Authentication Error",
           message: "Invalid credentials",
@@ -28,7 +26,6 @@ class AuthController {
       }
 
       if (userData && userData.user) {
-        console.log("Setting session and cookie");
         req.session.user = {
             id: userData.user.id || userData.user._id,
             email: userData.user.email,
@@ -40,16 +37,12 @@ class AuthController {
         };
     }
 
-      console.log("Full user data object:", userData.user);
-
-      console.log("Assigned session:", req.session);
+      req.logger.info("Full user data object:", userData.user);
 
       res.cookie("coderCookieToken", userData.token, {
         httpOnly: true,
         secure: false,
       });
-
-      console.log("Login successful, redirecting to /products");
       return res
         .status(200)
         .json({
@@ -58,12 +51,11 @@ class AuthController {
           redirect: "/products",
         });
     } catch (error) {
-      console.error("An error occurred:", error);
+      req.logger.error("An error occurred:", error);
       return next(error);
     }
   }
   async githubCallback(req, res) {
-    console.log("Inside AuthController githubCallback");
     try {
       if (req.user) {
         req.session.user = req.user;

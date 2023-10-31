@@ -1,4 +1,4 @@
-import TicketService from "../services/ticketService.js";
+import TicketService from "../services/ticketSrvice.js";
 
 class TicketController {
   constructor() {
@@ -7,7 +7,6 @@ class TicketController {
 
   async createTicket(req) {
     try {
-
         const data = req.body;
         const ticket = await this.ticketService.createTicket(data);
 
@@ -17,7 +16,7 @@ class TicketController {
             throw new Error("Error al crear el ticket");
         }
     } catch (error) {
-        console.error('Error específico en la creación del ticket:', error);
+        req.logger.error('Error específico en la creación del ticket:', error);
         throw error;  
     }
 }

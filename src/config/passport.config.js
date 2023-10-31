@@ -5,13 +5,7 @@ import { userModel } from "../models/user.models.js";
 import { createHash, isValidPassword } from "../../utils.js";
 import GitHubStrategy from "passport-github2";
 import AuthService from "../services/authService.js";
-import {
-  JWT_SECRET,
-  CLIENT_ID_GITHUB,
-  CLIENT_SECRET_GITHUB,
-  ADMIN_EMAIL,
-  ADMIN_PASSWORD,
-} from "../config/config.js";
+import { ENV_CONFIG } from "../config/config.js";
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
@@ -41,28 +35,23 @@ const initializePassport = () => {
             password: createHash(password),
           };
 
-          console.log("Rol antes de la asignación:", user.role);
-
           if (
-            user.email == process.env.ADMIN_EMAIL &&
-            password === process.env.ADMIN_PASSWORD
+            user.email == ENV_CONFIG.adminEmail &&
+            password === ENV_CONFIG.adminPassword
           ) {
-            console.log("Asignando role de admin");
+            req.logger.info("Asignando role de admin");
             user.role = "admin";
           } else {
-            console.log("Asignando role de usuario");
+            req.logger.info("Asignando role de usuario");
             user.role = "user";
           }
 
-          console.log("Rol después de la asignación:", user.role);
-
           let result = await userModel.create(user);
-          console.log("Usuario después de guardar:", result);
           if (result) {
             return done(null, result);
           }
         } catch (error) {
-          console.error("Error durante el proceso de registro:", error);
+          req.logger.error("Error durante el proceso de registro:", error);
           return done(error);
         }
       }
@@ -98,7 +87,7 @@ const initializePassport = () => {
     new JWTStrategy(
       {
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: process.env.JWT_SECRET,
+        secretOrKey: ENV_CONFIG.jwtSecret,
       },
       async (jwt_payload, done) => {
         console.log("JWT Payload:", jwt_payload);
@@ -120,9 +109,9 @@ passport.use(
   "github",
   new GitHubStrategy(
     {
-      clientID: process.env.CLIENT_ID_GITHUB,
-      clientSecret: process.env.CLIENT_SECRET_GITHUB,
-      callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+      clientID: ENV_CONFIG.clientIdGithub,
+      clientSecret: ENV_CONFIG.clientSecretGithub,
+      callbackURL: "http://localhost:8000/api/sessions/githubcallback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -156,10 +145,10 @@ const cookieExtractor = (req) => {
   let token = null;
 
   if (req && req.cookies) {
-    console.log("Cookies:", req.cookies);
+    req.logger.info("Cookies:", req.cookies);
     token = req.cookies["coderCookieToken"];
   }
 
-  console.log("Token Extracted:", token);
+  req.logger.info("Token Extracted:", token);
   return token;
 };

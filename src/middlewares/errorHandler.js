@@ -1,4 +1,4 @@
-import CustomError from "../services/errors/CustomError.js";
+import CustomError from "../services/errors/customError.js";
 
 export default function errorHandler(err, req, res, next) {
   if (err instanceof CustomError) {
