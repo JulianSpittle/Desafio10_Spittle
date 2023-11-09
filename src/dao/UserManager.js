@@ -3,7 +3,7 @@ import { createHash, isValidPassword } from "../../utils.js";
 import UserDTO from "./dto/user.dto.js";
 
 class UserManager {
-  async addUser({ first_name, last_name, email, age, password, role }) {
+  async addUser({ first_name, last_name, email, age, password, role, cart}) {
     try {
       const existingUser = await userModel.findOne({ email });
 
@@ -20,6 +20,7 @@ class UserManager {
         age,
         password: hashedPassword,
         role,
+        cart
       });
 
       console.log("User added!", user);
@@ -65,6 +66,8 @@ class UserManager {
       return false;
     }
   }
+
+
 }
 
 export default UserManager;
