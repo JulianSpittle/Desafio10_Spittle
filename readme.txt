@@ -1,1 +1,1 @@
-Actualizado el proyecto en cuanto a mocks y errores.
+Actualizado el proyecto en cuanto a Documentacion de la API.

@@ -24,12 +24,14 @@ import smsRouter from "./src/routes/sms.routes.js";
 import mockingRouter from "./src/mocking/mock.router.js";
 import { addLogger, devLogger  } from "./src/config/logger.js";
 import loggerRouter from "./src/routes/logger.routes.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUIExpress from "swagger-ui-express";
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = ENV_CONFIG.port || 8080;
 
 const httpServer = app.listen(port, () => {
-  console.log("Servidor escuchando en puerto " + port);
+  devLogger.log("Servidor escuchando en puerto " + port);
 });
 export const socketServer = new Server(httpServer);
 
@@ -50,6 +52,22 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"], 
   })
 );
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+
+    info: {
+      title: "Documentacion API Adoptme",
+
+      description: "Documentacion del uso de las apis relacionadas.",
+    },
+  },
+
+  apis: [`./src/docs/**/*.yaml`],
+};
+
+const specs = swaggerJSDoc(swaggerOptions);
 
 app.use(addLogger);
 app.use(express.json());
@@ -83,6 +101,7 @@ app.use('/email', emailRouter);
 app.use('/sms', smsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use("/loggerTest", loggerRouter);
+app.use("/apidocs", swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
 
 
 const PM = new ProductManager();
