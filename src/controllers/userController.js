@@ -28,7 +28,7 @@ class UserController {
           message: "Error tratando de crear el usuario",
           code: 400,
         });
-        return next(customError);
+        throw customError; // Usa 'throw' para lanzar el error y manejarlo en el bloque catch.
       }
 
       const response = await this.userService.registerUser({
@@ -40,13 +40,24 @@ class UserController {
         role,
       });
 
-      return res.status(response.status === "success" ? 200 : 400).json({
+      return res.status(200).json({
         status: response.status,
         data: response.user,
         redirect: response.redirect,
       });
     } catch (error) {
-      return next(error);
+      if (error instanceof CustomError) {
+        return res.status(error.code).json({
+          status: 'error',
+          message: error.message,
+        });
+      } else {
+        console.error(error);
+        return res.status(500).json({
+          status: 'error',
+          message: 'Error interno del servidor',
+        });
+      }
     }
   }
 

@@ -10,12 +10,16 @@ program
 
 const environment = program.opts().mode;
 
-dotenv.config({
-  path:
-    environment === "production"
-      ? "./src/config/.env.production"
-      : "./src/config/.env.development",
-});
+let envPath;
+if (environment === "production") {
+  envPath = "./src/config/.env.production";
+} else if (environment === "test") {
+  envPath = "./src/config/.env.test"; 
+} else {
+  envPath = "./src/config/.env.development";
+}
+
+dotenv.config({ path: envPath });
 
 export const ENV_CONFIG = {
   port: process.env.PORT,
