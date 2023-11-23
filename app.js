@@ -31,7 +31,7 @@ const app = express();
 const port = ENV_CONFIG.port || 8080;
 
 const httpServer = app.listen(port, () => {
-  devLogger.log("Servidor escuchando en puerto " + port);
+  devLogger.info("Servidor escuchando en puerto " + port);
 });
 export const socketServer = new Server(httpServer);
 
