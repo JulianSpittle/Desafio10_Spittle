@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { generateMockProduct } from "../mocking/utils.mock.js";
 
 const expect = chai.expect;
-const requester = supertest("http://localhost:8000");
+const requester = supertest("http://localhost:8080");
 
 describe("Test de integracion de ecommerce", () => {
   let globalCookie = null;
