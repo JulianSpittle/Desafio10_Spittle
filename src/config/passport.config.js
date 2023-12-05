@@ -41,6 +41,12 @@ const initializePassport = () => {
           ) {
             req.logger.info("Asignando role de admin");
             user.role = "admin";
+          } else if (
+            user.email == ENV_CONFIG.premiumEmail &&
+            password === ENV_CONFIG.premiumPassword
+          ) {
+            req.logger.info("Asignando role de premium");
+            user.role = "premium";
           } else {
             req.logger.info("Asignando role de usuario");
             user.role = "user";
@@ -63,8 +69,6 @@ const initializePassport = () => {
     new LocalStrategy(
       { usernameField: "email", passwordField: "password" },
       async (username, password, done) => {
-        console.log("[Auth] Trying to authenticate user:", username);
-
         try {
           let user = await userModel.findOne({ email: username });
 
@@ -74,8 +78,12 @@ const initializePassport = () => {
           if (!isValidPassword(user, password)) {
             return done(null, false, { message: "Contraseña incorrecta." });
           }
+
+          await user.save();
+
           return done(null, user);
         } catch (error) {
+          console.log("last_conection", user.last_connection);
           return done(error);
         }
       }

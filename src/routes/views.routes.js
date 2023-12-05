@@ -12,27 +12,26 @@ const CM = new CartManager();
 async function loadUserCart(req, res, next) {
   if (req.session && req.session.user) {
     const cartId = req.session.user.cart;
-    console.log('Cart ID:', cartId);  
+    console.log("Cart ID:", cartId);
 
     const cartManager = new CartManager();
     const cart = await cartManager.getCart(cartId);
-    console.log('Cart:', cart); 
+    console.log("Cart:", cart);
 
     req.cart = cart;
   }
   next();
 }
 
-
 router.get("/", checkSession, async (req, res) => {
   const products = await PM.getProducts(req.query);
-  res.render("home", { products});
+  res.render("home", { products });
 });
 
 router.get("/products", checkSession, async (req, res) => {
   const products = await PM.getProducts(req.query);
   const user = req.session.user;
-  
+
   console.log(user);
   res.render("products", { products, user });
 });
@@ -61,8 +60,6 @@ router.get("/carts", loadUserCart, async (req, res) => {
   }
 });
 
-
-
 router.post("/carts/:cid/purchase", async (req, res) => {
   const cid = req.params.cid;
   cartControllers.getPurchase(req, res, cid);
@@ -86,25 +83,24 @@ router.get("/register", checkAlreadyLoggedIn, (req, res) => {
 
 router.get("/profile", checkSession, (req, res) => {
   const userData = req.session.user;
-  console.log('User data:', userData);
-  res.render("profile", { user: userData });
+  res.render("profile", { user: userData, userId: userData.id });
 });
 
 router.get("/restore", async (req, res) => {
   res.render("restore");
 });
 
-router.get('/reset-password/:token', async (req, res) => {
+router.get("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
   const user = await userModel.findOne({
     resetPasswordToken: token,
-    resetPasswordExpires: { $gt: Date.now() }
+    resetPasswordExpires: { $gt: Date.now() },
   });
 
   if (!user) {
-    return res.redirect('/restore');
+    return res.redirect("/restore");
   }
-  res.render('reset-password', { token });
+  res.render("reset-password", { token });
 });
 
 router.get("/faillogin", (req, res) => {
@@ -119,5 +115,17 @@ router.get("/failregister", async (req, res) => {
     status: "Error",
     message: "Error! No se pudo registar el Usuario!",
   });
+});
+
+router.get("/upload/:uid", (req, res) => {
+  const userId = req.params.uid;
+  console.log("UserID:", userId);
+  res.render("uploads", { userId });
+});
+
+router.get("/premium/:uid", (req, res) => {
+  const userId = req.params.uid;
+  console.log("UserID:", userId);
+  res.render("premium", { userId });
 });
 export default router;

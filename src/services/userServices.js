@@ -8,7 +8,15 @@ class UserService {
     this.CartManager = new CartManager();
   }
 
-  async registerUser({ first_name, last_name, email, age, password, role }) {
+  async registerUser({
+    first_name,
+    last_name,
+    email,
+    age,
+    password,
+    role,
+    last_connection,
+  }) {
     try {
       const cartResponse = await this.CartManager.newCart();
       console.log("Cart response:", cartResponse);
@@ -22,7 +30,6 @@ class UserService {
       ? "premium"
       : "user";
         
-
       const cartId = cartResponse.id;
       console.log("Cart ID:", cartId);
 
@@ -34,6 +41,7 @@ class UserService {
         password,
         role,
         cart: cartId,
+        last_connection,
       });
 
       if (user) {

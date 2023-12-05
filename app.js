@@ -26,6 +26,7 @@ import { addLogger, devLogger  } from "./src/config/logger.js";
 import loggerRouter from "./src/routes/logger.routes.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUIExpress from "swagger-ui-express";
+import usersRouter from "./src/routes/users.routes.js";
 
 const app = express();
 const port = ENV_CONFIG.port || 8080;
@@ -99,6 +100,7 @@ app.use("/api/sessions/", sessionsRouter);
 app.use("/", viewsRouter);
 app.use('/email', emailRouter);
 app.use('/sms', smsRouter);
+app.use("/api/users", usersRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use("/loggerTest", loggerRouter);
 app.use("/apidocs", swaggerUIExpress.serve, swaggerUIExpress.setup(specs));

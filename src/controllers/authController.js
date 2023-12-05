@@ -17,6 +17,11 @@ class AuthController {
       const userData = await this.authService.login(email, password);
       req.logger.info("User data retrieved:", userData);
 
+      userData.user.last_connection = new Date();
+      console.log("last_conection +999", userData.user.last_connection);
+
+      await userData.user.save();
+
       if (!userData || !userData.user) {
         req.logger.error("Invalid credentials");
         const customError = new CustomError({

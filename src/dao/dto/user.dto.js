@@ -1,13 +1,9 @@
-class UserDTO {
-    constructor(user) {
-      console.log("User data before creating DTO:", user);
-      this.firstName = user.first_name;
-      this.lastName = user.last_name;
-      this.email = user.email;
-      this.role = user.role;
-      this.age = user.age;
-    }
+class DTOFactory {
+  createUserDTO(user) {
+      console.log("User data before creating DTO in factory:", user);
+      return new UserDTO(user);
   }
-  
-  export default UserDTO;
-  
+
+}
+
+export default DTOFactory;
