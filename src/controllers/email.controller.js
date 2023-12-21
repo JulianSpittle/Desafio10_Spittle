@@ -88,4 +88,3 @@ export const sendEmailWithAttachments = (req, res) => {
       });
   }
 };
-

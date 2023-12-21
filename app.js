@@ -27,6 +27,7 @@ import loggerRouter from "./src/routes/logger.routes.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUIExpress from "swagger-ui-express";
 import usersRouter from "./src/routes/users.routes.js";
+import paymentsRouter from "./src/routes/payments.routes.js";
 
 const app = express();
 const port = ENV_CONFIG.port || 8080;
@@ -34,6 +35,16 @@ const port = ENV_CONFIG.port || 8080;
 const httpServer = app.listen(port, () => {
   devLogger.info("Servidor escuchando en puerto " + port);
 });
+
+const mongoUrl = ENV_CONFIG.mongoUrl;
+mongoose.connect(mongoUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 20000, 
+})
+.then(() => console.log('Conectado a MongoDB'))
+.catch(err => console.error('Error al conectar a MongoDB', err));
+
 export const socketServer = new Server(httpServer);
 
 app.set("socketServer", socketServer);
@@ -47,6 +58,7 @@ app.engine(
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 app.use(express.static(__dirname));
+
 app.use(
   cors({
     credentials: true,
@@ -71,6 +83,7 @@ const swaggerOptions = {
 const specs = swaggerJSDoc(swaggerOptions);
 
 app.use(addLogger);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -87,12 +100,14 @@ app.use(
     }),
   })
 );
+
 app.use(cookieParser());
 
 app.use(passport.initialize());
 app.use(passport.session());
 initializePassport();
 
+//Rutas
 app.use("/api/products/", productsRouter);
 app.use("/api/carts/", cartsRouter);
 app.use("/", viewsRouter);
@@ -104,6 +119,7 @@ app.use("/api/users", usersRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use("/loggerTest", loggerRouter);
 app.use("/apidocs", swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
+app.use("/payment", paymentsRouter);
 
 
 const PM = new ProductManager();

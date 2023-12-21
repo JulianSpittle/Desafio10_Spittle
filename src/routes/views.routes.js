@@ -4,6 +4,7 @@ import CartManager from "../dao/cartManager.js";
 import cartControllers from "../controllers/cartControllers.js";
 import { checkAlreadyLoggedIn, checkSession } from "../middlewares/ingreso.js";
 import { userModel } from "../models/user.models.js";
+import ticketController from "../controllers/ticketController.js";
 
 const router = express.Router();
 const PM = new ProductManager();
@@ -63,6 +64,22 @@ router.get("/carts", loadUserCart, async (req, res) => {
 router.post("/carts/:cid/purchase", async (req, res) => {
   const cid = req.params.cid;
   cartControllers.getPurchase(req, res, cid);
+});
+
+router.get("/mostrar-ticket/:ticketId", async (req, res) => {
+  const ticketId = req.params.ticketId;
+  try {
+    const ticket = await ticketController.getTicketById(ticketId);
+
+    if (ticket) {
+      res.render("ticket", { ticket });
+    } else {
+      res.status(404).send("Ticket no encontrado");
+    }
+  } catch (error) {
+    console.error("Error al mostrar el ticket:", error);
+    res.status(500).send("Error interno del servidor");
+  }
 });
 
 router.get("/realtimeproducts", (req, res) => {
@@ -128,4 +145,10 @@ router.get("/premium/:uid", (req, res) => {
   console.log("UserID:", userId);
   res.render("premium", { userId });
 });
+
+router.get("/adminController", async (req, res) => {
+  const users = await userModel.find();
+  res.render("adminController", { users });
+});
+
 export default router;

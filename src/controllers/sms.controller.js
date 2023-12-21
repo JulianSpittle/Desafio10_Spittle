@@ -8,7 +8,7 @@ const twilioClient = twilio(
 const twilioSMSOptions = {
   body: "Esto es un mensaje SMS de prueba usando Twilio desde Coderhouse.",
   from: ENV_CONFIG.twilioNumber,
-  to: "+54 358 506 9301",
+  to: "+54 11 3210 6582",
 };
 
 export const sendSMS = async (req, res) => {

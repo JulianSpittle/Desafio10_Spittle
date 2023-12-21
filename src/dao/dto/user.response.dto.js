@@ -5,5 +5,3 @@ export default class UserRespose {
       this.email = user.email;
     }
   }
-  
-  

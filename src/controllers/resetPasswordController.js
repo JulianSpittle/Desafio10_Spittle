@@ -25,7 +25,7 @@ const sendResetPasswordEmail = async (userEmail) => {
 
   const resetUrl = `http://localhost:8080/reset-password/${resetToken}`;
   let mailOptions = {
-    from: "tuemail@example.com",
+    from: "mailejemplo@example.com",
     to: userEmail,
     subject: "Link de restablecimiento de contraseña",
     text: `Por favor, para restablecer tu contraseña haz clic en el siguiente enlace: ${resetUrl}`,

@@ -36,6 +36,13 @@ const agregarProductoAlCarrito = async (pid) => {
       return;
     }
 
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Producto agregado al carrito",
+      showConfirmButton: false,
+      timer: 1500,
+    });
     console.log("Producto agregado al carrito con éxito.");
   } catch (error) {
     console.error("Error al agregar el producto al carrito: " + error);
@@ -43,28 +50,45 @@ const agregarProductoAlCarrito = async (pid) => {
 };
 
 async function realizarCompra() {
-  try {
-    const cid = await obtenerIdCarrito();
-
-    if (!cid) {
-      console.error("El ID del carrito es inválido.");
-      return;
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "¡No podrás revertir esta acción!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, realizar compra",
+    cancelButtonText: "No, cancelar",
+    reverseButtons: true,
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const cid = await obtenerIdCarrito();
+        if (!cid) {
+          console.error("El ID del carrito es inválido.");
+          return;
+        }
+        const response = await fetch(`/api/carts/${cid}/purchase`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!response.ok) {
+          console.error("Error al realizar la compra.");
+          return;
+        }
+        Swal.fire(
+          "¡Compra Realizada!",
+          "Tu compra se ha realizado con éxito.",
+          "success"
+        );
+        console.log("Compra realizada con éxito.");
+      } catch (error) {
+        console.error("Error al realizar la compra: " + error);
+      }
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire("Cancelado", "Tu compra ha sido cancelada.", "error");
     }
-
-    const response = await fetch(`/api/carts/${cid}/purchase`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!response.ok) {
-      console.error("Error al realizar la compra.");
-      return;
-    }
-
-    console.log("Compra realizada con éxito.");
-  } catch (error) {
-    console.error("Error al realizar la compra: " + error);
-  }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -88,3 +112,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+const eliminarProductoDelCarrito = async (pid) => {
+  try {
+    const cid = await obtenerIdCarrito();
+
+    const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el producto del carrito.");
+    }
+
+    console.log("Producto eliminado del carrito con éxito.");
+  } catch (error) {
+    console.error("Error al eliminar el producto del carrito: " + error);
+  }
+};

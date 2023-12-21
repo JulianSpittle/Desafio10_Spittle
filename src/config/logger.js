@@ -68,4 +68,3 @@ export const addLogger = (req, res, next) => {
     req.logger.info(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
     next();
 };
-

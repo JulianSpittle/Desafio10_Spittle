@@ -1,8 +1,10 @@
 import ProductService from "../services/productService.js";
 import { socketServer } from "../../app.js";
 import mongoose from "mongoose";
-import CustomError from "../services/errors/customError.js";
 import { generateProductErrorInfo } from "../services/errors/messages/product-error.js";
+import { transporter } from "./email.controller.js";
+import { userModel } from "../models/user.models.js";
+import CustomError from "../services/errors/customError.js";
 
 class ProductController {
   constructor() {
@@ -73,8 +75,8 @@ class ProductController {
       thumbnails,
     } = req.body;
 
-    const owner = req.user._id; 
-    
+    const owner = req.user._id;
+
     if (!title) {
       res.status(400).send({
         status: "error",
@@ -150,6 +152,7 @@ class ProductController {
         res.send({
           status: "ok",
           message: "El Producto se agregó correctamente!",
+          productId: wasAdded._id,
         });
         socketServer.emit("product_created", {
           _id: wasAdded._id,
@@ -241,10 +244,6 @@ class ProductController {
 
       const product = await this.productService.getProductById(pid);
 
-      console.log("user",req.user)
-      console.log("product owner", product.owner);
-
-
       if (!product) {
         req.logger.error("Producto no encontrado");
         res.status(404).send({
@@ -253,7 +252,24 @@ class ProductController {
         });
         return;
       }
+      const owner = await userModel.findById(product.owner);
+      console.log("owner", owner.role);
+      if (owner && owner.role == "premium") {
+        const mailOptions = {
+          from: "mailejemplo@example.com",
+          to: owner.email,
+          subject: "Tu Producto ha sido Eliminado",
+          text: `Lamentamos informarte que tu producto ${product.title} ha sido eliminado.`,
+        };
 
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error("Error al enviar correo:", error);
+          } else {
+            console.log("Correo enviado: " + info.response);
+          }
+        });
+      }
       if (
         !req.user ||
         (req.user.role !== "admin" &&

@@ -19,6 +19,22 @@ class TicketService {
     console.log("Ticket creado:", ticket);
     return ticket;
   }
+
+  async getTicketById(ticketId) {
+    try {
+      const ticket = await ticketModel.findById(ticketId);
+
+      if (!ticket) {
+        console.error("Ticket no encontrado con ID:", ticketId);
+        return null;
+      }
+
+      return ticket;
+    } catch (error) {
+      console.error("Error al buscar el ticket por ID:", error);
+      throw error;
+    }
+  }
 }
 
 export default TicketService;
