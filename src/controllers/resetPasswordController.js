@@ -23,7 +23,7 @@ const sendResetPasswordEmail = async (userEmail) => {
     },
   });
 
-  const resetUrl = `http://localhost:8080/reset-password/${resetToken}`;
+  const resetUrl = `https://entregafinalnodejsspittle-production.up.railway.app/reset-password/${resetToken}`;
   let mailOptions = {
     from: "mailejemplo@example.com",
     to: userEmail,

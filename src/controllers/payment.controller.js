@@ -50,9 +50,9 @@ export const createPayment = async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${cartId}`,
+      success_url: `https://entregafinalnodejsspittle-production.up.railway.app/payment/payment-success?session_id={CHECKOUT_SESSION_ID}&cart_id=${cartId}`,
       cancel_url:
-        "",
+        "https://entregafinalnodejsspittle-production.up.railway.app/cancel",
     });
 
     res.json(session);
