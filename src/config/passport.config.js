@@ -119,7 +119,7 @@ passport.use(
     {
       clientID: ENV_CONFIG.clientIdGithub,
       clientSecret: ENV_CONFIG.clientSecretGithub,
-      callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+      callbackURL: "http://https://entregafinalnodejsspittle-production.up.railway.app/api/sessions/githubcallback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

@@ -5,13 +5,13 @@
   }
   
   .agregar button {
-    border: none;
-    background-color: #886F6F;
-    color: #FFF;
-    width: 150px;
-    height: 40px;
-    border-radius: 5%;
-  }
+  border: none;
+  background-color: #394867; /* Dark blue */
+  color: #FFFFFF; /* White */
+  width: 180px;
+  height: 50px;
+  border-radius: 8px;
+}
   
   
   .container-register {
@@ -26,8 +26,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: #EAE0DA;
-    color: #886F6F;
+    background-color: #394867;
+    color: #FFFFFF;
     width: 35%;
     border-radius: 5px;
     gap: 20px;
@@ -40,7 +40,7 @@
   
   .btn-register {
     border: none;
-    background-color: #886F6F;
+    background-color: #394867;
     color: #FFF;
     width: 100%;
     height: 40px;
@@ -62,7 +62,7 @@
     justify-content: center;
     flex-direction: column;
     background-color: #EAE0DA;
-    color: #886F6F;
+    color: #394867;
     width: 35%;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -85,7 +85,7 @@
   }
   
   .container-carts h1 {
-    color: #7D5A5A;
+    color: #394867;
     text-transform: uppercase;
   }
   
@@ -100,13 +100,13 @@
   
   .container-nav ul li {
     text-transform: uppercase;
-    color: #7D5A5A;
+    color: #394867;
     list-style-type: none;
     padding: 5%;
   }
   
   .container-nav ul li a {
-    color: #7D5A5A;
+    color: #394867;
     text-decoration: none;
   }
   
@@ -116,7 +116,7 @@
   
   .btn-login {
     border: none;
-    background-color: #886F6F;
+    background-color: #394867;
     color: #FFF;
     width: 100%;
     height: 40px;
@@ -125,12 +125,14 @@
   }
   
   .marco-img {
-    border: 1px solid #886F6F;
+    border: 1px solid #394867;
     padding: 20px;
   }
   
   .marco-img img {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    height:30vh;
+    width: 40vh;
   }
   
   .form_main {
@@ -194,8 +196,8 @@
   #button {
     position: relative;
     width: 100%;
-    border: 2px solid #8000ff;
-    background-color: #8000ff;
+    border: 2px solid #394867;
+    background-color: #394867;
     height: 40px;
     color: white;
     font-size: .8em;
@@ -261,7 +263,7 @@
   
   .user {
     padding: 20px;
-    color: #886F6F;
+    color: #394867;
   }
   
   .user p {
@@ -274,7 +276,7 @@
   }
   
   .user-data h1 {
-    color: #886F6F;
+    color: #394867;
     font-size: 2rem;
   }
   
@@ -285,7 +287,7 @@
   
   .btn-logout {
     border: none;
-    background-color: #886F6F;
+    background-color: #394867;
     color: #FFF;
     width: 150px;
     height: 40px;
@@ -294,7 +296,7 @@
   .title-home {
     font-size: 4.5rem;
     font-weight: bold;
-    color: #886F6F;
+    color: #394867;
   }
   
   .nav-products {
@@ -305,7 +307,7 @@
   }
   
   .envios {
-    color: #886F6F;
+    color: #394867;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     font-size: 16px;
     width: 100%;
@@ -334,13 +336,13 @@
   }
   
   .details h1 {
-    color: #7D5A5A;
+    color: #394867;
     padding: 2%;
   }
   
   .details button {
     border: none;
-    background-color: #886F6F;
+    background-color: #394867;
     color: #FFF;
     width: 150px;
     height: 40px;
@@ -353,7 +355,7 @@
     flex-direction: row;
     width: 100%;
     background-color: #F8F6F4;
-    border: 1px solid #886F6F;
+    border: 1px solid #394867;
     margin: 10px 0;
     padding: 10px;
   }
@@ -373,25 +375,25 @@
   .product-cart button {
     border: none;
     color: #FFF;
-    background-color: #7D5A5A;
+    background-color: #394867;
     height: 40px;
     width: 150px;
   }
   
   .marco-imagen {
-    border: 1px solid #886F6F;
+    border: 1px solid #394867;
     padding: 20px;
   }
   
   .marco-imagen img {
     height: 40vh;
-    width: 28vh;
+    width: 40vh;
   }
   
   #cartButton {
     border: none;
     background-color: transparent;
-    color: #7D5A5A;
+    color: #394867;
   }
   
   .form {
@@ -529,7 +531,7 @@
   
   .btn-uploads {
     border: none;
-    background-color: #7D5A5A;
+    background-color: #394867;
     color: #FFF;
     width: 150px;
     height: 40px;
@@ -586,3 +588,5 @@
     font-size: 1em;
     text-align: left;
   }
+
+

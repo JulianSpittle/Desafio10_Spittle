@@ -48,7 +48,7 @@ const agregarProductoAlCarrito = async (pid) => {
       return;
     }
     Swal.fire({
-      position: "top-end",
+      position: "center",
       icon: "success",
       title: "Producto agregado al carrito",
       showConfirmButton: false,
