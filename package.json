@@ -35,7 +35,7 @@
 		"winston-transport": "^4.6.0"
 	},
 	"type": "module",
-	"name": "EntregaFinal",
+	"name": "entregafinal",
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
