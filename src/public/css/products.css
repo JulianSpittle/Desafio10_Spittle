@@ -3,6 +3,10 @@
     padding: 0;
     box-sizing: border-box;
   }
+
+  body {
+    background-color:white;
+}
   
   .agregar button {
   border: none;
@@ -21,6 +25,11 @@
     margin-top: 20px;
   }
   
+  .logo img{
+    height:100%;
+    width:auto;
+    }
+
   .register {
     display: flex;
     align-items: center;

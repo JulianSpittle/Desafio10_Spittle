@@ -26,7 +26,12 @@
 }
 
 body {
-    background-color: #Ffff;
+    background-color:white;
+}
+
+.logo img{
+height:100%;
+width:auto;
 }
 
 .product img {
@@ -140,8 +145,8 @@ a {
 }
 
 .container-text-home img {
-    height: 40vh;
-    width: 40vh;
+    height: 30vh;
+    width: 30vh;
 }
 
 .envios {
