@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CartManager from "../dao/cartManager.js";
+import CartManager from "../dao/CartManager.js";
 import cartControllers from "../controllers/cartControllers.js";
 import { authorization, passportCall } from "../../utils.js";
 import { userModel } from "../models/user.models.js";
