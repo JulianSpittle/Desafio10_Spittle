@@ -40,7 +40,7 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "nodemon --cwd src app.js",
-		"start": "node app.js --omit=dev",
+		"start": "node app.js",
     	"test": "mocha test/supertest.test.js"
 	},
 	"keywords": [],
