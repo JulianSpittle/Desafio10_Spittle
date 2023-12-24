@@ -1,7 +1,7 @@
 import { createHash, isValidPassword } from "../../utils.js";
 import { userModel } from "../models/user.models.js";
 import AuthService from "../services/authService.js";
-import CustomError from "../services/errors/customError.js";
+import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/errors-enum.js";
 import { generateAuthenticationErrorInfo } from "../services/errors/messages/user-auth-error.js";
 import sendResetPasswordEmail from "./resetPasswordController.js";

@@ -1,6 +1,6 @@
 import UserManager from "../dao/UserManager.js";
 import { ENV_CONFIG } from "../config/config.js";
-import CartManager from "../dao/cartManager.js";
+import CartManager from "../dao/CartManager.js";
 
 class UserService {
   constructor() {

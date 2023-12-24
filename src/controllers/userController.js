@@ -1,6 +1,6 @@
 import UserService from "../services/userServices.js";
 import UserResponse from "../dao/dto/user.response.dto.js";
-import CustomError from "../services/errors/customError.js";
+import CustomError from "../services/errors/CustomError.js";
 import { generateUserErrorInfo } from "../services/errors/messages/user-creation-error.js";
 import EErrors from "../services/errors/errors-enum.js";
 import { createHash } from "../../utils.js";

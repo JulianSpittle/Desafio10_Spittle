@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { generateProductErrorInfo } from "../services/errors/messages/product-error.js";
 import { transporter } from "./email.controller.js";
 import { userModel } from "../models/user.models.js";
-import CustomError from "../services/errors/customError.js";
+import CustomError from "../services/errors/CustomError.js";
 
 class ProductController {
   constructor() {
