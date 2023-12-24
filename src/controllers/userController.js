@@ -297,9 +297,9 @@ class UserController {
     try {
       const twoDaysAgo = new Date(new Date().setDate(new Date().getDate() - 2));
 
-      //prueba para 30 minutos de inactividad
+      //prueba para 10 minutos de inactividad
       // const currentTime = new Date();
-      // const thirtyMinutesAgo = new Date(currentTime.getTime() - 30 * 60 * 1000);
+      // const tenMinutesAgo = new Date(currentTime.getTime() - 10 * 60 * 1000);
 
       const inactiveUsers = await userModel.find({
         last_connection: { $lt: twoDaysAgo },

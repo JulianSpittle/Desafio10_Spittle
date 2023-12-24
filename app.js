@@ -1,3 +1,4 @@
+//Imports utilizados
 import express from "express";
 import Handlebars from "handlebars";
 import expressHandlebars from "express-handlebars";
@@ -17,7 +18,6 @@ import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import DBManager from './src/mongo/ds.js';
 import { ENV_CONFIG } from "./src/config/config.js";
 import emailRouter from "./src/routes/email.routes.js";
 import smsRouter from "./src/routes/sms.routes.js";
@@ -45,10 +45,11 @@ mongoose.connect(mongoUrl, {
 .then(() => console.log('Conectado a MongoDB'))
 .catch(err => console.error('Error al conectar a MongoDB', err));
 
+//Socket server
 export const socketServer = new Server(httpServer);
-
 app.set("socketServer", socketServer);
 
+//Handlebars
 app.engine(
   "handlebars",
   expressHandlebars.engine({
@@ -59,6 +60,7 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 app.use(express.static(__dirname));
 
+//Cors
 app.use(
   cors({
     credentials: true,
@@ -66,6 +68,7 @@ app.use(
   })
 );
 
+//Swagger
 const swaggerOptions = {
   definition: {
     openapi: "3.0.1",
@@ -82,6 +85,7 @@ const swaggerOptions = {
 
 const specs = swaggerJSDoc(swaggerOptions);
 
+//Logger
 app.use(addLogger);
 
 app.use(express.json());
@@ -100,9 +104,9 @@ app.use(
     }),
   })
 );
-
 app.use(cookieParser());
 
+//Passport
 app.use(passport.initialize());
 app.use(passport.session());
 initializePassport();
@@ -112,7 +116,6 @@ app.use("/api/products/", productsRouter);
 app.use("/api/carts/", cartsRouter);
 app.use("/", viewsRouter);
 app.use("/api/sessions/", sessionsRouter);
-app.use("/", viewsRouter);
 app.use('/email', emailRouter);
 app.use('/sms', smsRouter);
 app.use("/api/users", usersRouter);
