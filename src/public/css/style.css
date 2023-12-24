@@ -79,13 +79,6 @@ a {
     padding: 10px;
 }
 
-img {
-    width: 100px;
-    height: 100px;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
 .container-chat {
     display: flex;
     align-items: center;
@@ -146,14 +139,9 @@ img {
     padding: 5%;
 }
 
-.container-img-home img {
-    height: 50%;
-    width: 30vh;
-}
-
 .container-text-home img {
-    height: 50%;
-    width: 30vh;
+    height: 40vh;
+    width: 40vh;
 }
 
 .envios {
