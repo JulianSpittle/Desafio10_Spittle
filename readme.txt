@@ -18,5 +18,3 @@ Existen creados 3 usuarios para facilitar las pruebas:
 -Usuario "premium" con mail "premium@gmail.com" y contraseña asd
 
 Link del proyecto: https://entregafinalnodejsspittle-production.up.railway.app/
-
-Estoy al tanto de que el Front-End no esta prolijo y se puede mejorar mucho. Por cuestiones personales y la fecha de entrega no pude presentar algo mejor como me gustaría. Felices fiestas profesor!
